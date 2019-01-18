@@ -68,39 +68,43 @@ During the manual annotating period:
 
 ## MVP and more
 
-V0.1 - Batch processing + Storage + Query engine + Annotator Loop
+**V0.1** Batch processing + Storage + Query engine + Annotator Loop
 
-V0.2 - + Streaming processing (no fusion)
+**V0.2** + Streaming processing (no fusion)
 
-V0.3 - + Streaming processing (with fusion)
+**V0.3** + Streaming processing (with fusion)
 
-V1.0 - + More classification to support scene selection to get datasets for research use.
+**V1.0** + More classification to support scene selection to get datasets for research use.
 
 **Then we consider more functions based on these questions if we have time left:**
 
 Q1: What if some of the user upload bad data.
 
-V1.1 - + Add a detector and filter before processing to clean unqualified data.
+**V1.1** + Add a detector and filter before processing to clean unqualified data.
 
 Q2: How to differentiate the value of uploaded data?
+
 A2: We could emphasis those data in special scene, and those data have more false object detection by build-in model.
 
 Q3: Could we make better use of the annotator feedback?
-Q3: We may also record the precision and recall rate of manual annotation to get a report to detect the build-in model's weakness in terms of driving scene.
+
+A3: We may also record the precision and recall rate of manual annotation to get a report to detect the build-in model's weakness in terms of driving scene.
 
 Q4: How to simulate manual annotator?
-Q4: We use a worse ML model as the build-in model for processing, then use a better model as annotator to do scale up the whole pipeline.
 
-V1.2 - + Simulated manual annotator at the application
-V1.3 - + Record and analysis the feedback to evaluate the build-in model
+A4: We use a worse ML model as the build-in model for processing, then use a better model as annotator to do scale up the whole pipeline.
+
+**V1.2** + Simulated manual annotator at the application
+
+**V1.3** + Record and analysis the feedback to evaluate the build-in model
 V1.4 - + Add value evaluation after processing
 
 Q5: How to eliminate the data redundancy?
 
-V1.5 - + Add one layer between value evaluation module and storage layer to filter those common data that current data are good at.
+**V1.5** + Add one layer between value evaluation module and storage layer to filter those common data that current data are good at.
 
 Q6: Could we try to refine the build-in model like in a research domain?
 
-V2.0 - + Make it more flexible to train, test and set the build-in model.
+**V2.0** + Make it more flexible to train, test and set the build-in model.
 
-V3.0 - + Privacy Protection
+**V3.0** + Privacy Protection
