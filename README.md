@@ -4,7 +4,7 @@
 
 <img src="./images/chances.png" height="200" width="400" />
 
-Autonomous vehicles keep generating large amount of diverse sensor data, accompanied with four challenges for data engineering.
+Autonomous vehicles keep generating a large amount of diverse sensor data, accompanied with four challenges for data engineering.
 
 * **Data Acquisition**: How to gain more various data while eliminate data redundancy?
 * **Data Storage**: How to clean data? And how to store annotations?
@@ -18,7 +18,7 @@ In a word, there are tons of data engineering functions in demand within this da
 <img src="./images/business.png" height="200" width="400" />
 According to the business value analysis offered by our PM, our platform's main goal is to server self-driving research organization's requirement of high quality annotated data.
 
-So the priority function of this data engineering project is to **speed up manual data labeling** and implement related architecture for **data management**.
+So the prior function of this data engineering project is to **speed up manual data labeling** and implement related architecture for **data management**.
 
 ## Engineering
 
@@ -38,7 +38,7 @@ There are sufficient datasets to support test for batch processing and streaming
   * Size: ~ 30 GB keyframes for 20 hours driving
   * Directly download
 
-### How to realized the priority functions?
+### How to realized the prior functions?
 
 **Speed up manual data labeling:**
 
@@ -64,7 +64,8 @@ During the manual annotating period:
 
 * Ingestion and join data of different type
 * Computer vision and multi-sensor fusion in processing
-* Management of media data with various annotations
+* Management of media data with various annotation
+* Need to cut video (from batch and stream) into piece and take care the storage.
 
 ## MVP and more
 
@@ -85,7 +86,7 @@ Q1: What if some of the user upload bad data.
 
 **V1.1** + Add a detector and filter before processing to clean unqualified data.
 
-Q2: How to differentiate the value of uploaded data?
+Q2: How to differentiate the values of data?
 
 A2: We could emphasis those data in special scene, and those data have more false object detection by build-in model.
 
@@ -95,12 +96,13 @@ A3: We may also record the precision and recall rate of manual annotation to get
 
 Q4: How to simulate manual annotator?
 
-A4: We use a worse ML model as the build-in model for processing, then use a better model as annotator to do scale up the whole pipeline.
+A4: We use a worse ML model as the build-in model for processing, then use a better model as annotator to do scale up the whole pipeline. If we were using annotated dataset to test, we could just use the right annotation to compare.
 
 **V1.2** + Simulated manual annotator at the application
 
 **V1.3** + Record and analysis the feedback to evaluate the build-in model
-V1.4 - + Add value evaluation after processing
+
+**V1.4** + Add value evaluation after processing
 
 Q5: How to eliminate the data redundancy?
 
