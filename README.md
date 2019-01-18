@@ -2,7 +2,7 @@
 
 ## Background
 
-![Chances](./images/chances.png)
+<img src="./images/chances.png" height="200" width="400" />
 
 Autonomous vehicles keep generating large amount of diverse sensor data, accompanied with four challenges for data engineering.
 
@@ -15,7 +15,7 @@ In a word, there are tons of data engineering functions in demand within this da
 
 
 ### Business Value
-![BUsiness](./images/business.png)
+<img src="./images/business.png" height="200" width="400" />
 According to the business value analysis offered by our PM, our platform's main goal is to server self-driving research organization's requirement of high quality annotated data.
 
 So the priority function of this data engineering project is to **speed up manual data labeling** and implement related architecture for **data management**.
@@ -75,6 +75,9 @@ During the manual annotating period:
 **V0.3** + Streaming processing (with fusion)
 
 **V1.0** + More classification to support scene selection to get datasets for research use.
+
+
+---
 
 **Then we consider more functions based on these questions if we have time left:**
 
