@@ -2,3 +2,12 @@
 *__pycache__/
 
 .DS_Store
+
+# Ignore cluster configuration
+conf/
+
+# Ignore Jupyter Notebook files
+*.ipynb
+
+# Ignore the weights of Neural Network Graph
+*.weights
