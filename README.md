@@ -12,7 +12,7 @@ Autonomous vehicles keep generating a large amount of diverse sensor data, accom
 * **Data Labeling**: How to decrease the load for manual annotation?
 
 Our project is a data engineering system ingests real-time streaming data from common cars' driving recorders, then uses object detection model to auto-annotate the video and extract keyframes that are significant for a manual check. This platform could greatly speed up the labeling process, and with multiple metadata generated during different stages, we could manage collected data's diversity and quality, then make it a data ecosystem to support the data demand of self-driving car field's development.
-
+![Techstack](./images/ecosystem.png)
 
 ## Engineering
 
