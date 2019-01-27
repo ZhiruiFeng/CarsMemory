@@ -3,7 +3,7 @@ from flask import Flask, Response, render_template
 from kafka import KafkaConsumer
 
 # Fire up the Kafka Consumer
-topic = "toshow_video"
+topic = "distributed-video1"
 
 consumer = KafkaConsumer(
     topic,

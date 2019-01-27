@@ -1,5 +1,8 @@
-from yolo.models import Darknet
-from yolo.utils import utils
+import sys
+sys.path.append("./")
+
+from processor.yolo.models import *
+from processor.yolo.utils import *
 
 import cv2
 import os, sys, time, datetime, random
@@ -13,7 +16,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from PIL import Image
 
-from yolo.sort import Sort
+from processor.yolo.sort import *
 
 
 class YoloDetectron():
@@ -21,18 +24,18 @@ class YoloDetectron():
     def __init__(self):
 
         # Basical setting related to the YOLO mdoel
-        self.config_path = 'yolo/config/yolov3.cfg'
-        self.weights_path = 'yolo/config/yolov3.weights'
-        self.class_path = 'yolo/config/coco.names'
+        self.config_path = '/home/ubuntu/workspace/CarsMemory/processor/yolo/config/yolov3.cfg'
+        self.weights_path = '/home/ubuntu/workspace/CarsMemory/processor/yolo/config/yolov3.weights'
+        self.class_path = '/home/ubuntu/workspace/CarsMemory/processor/yolo/config/coco.names'
         self.img_size = 416
         self.conf_thres = 0.8
         self.nms_thres = 0.4
 
         # Load model and weights
         self.model = Darknet(self.config_path, img_size=self.img_size)
-        self.model.load_weights(self.weight_path)
+        self.model.load_weights(self.weights_path)
         self.model.eval()
-        self.num_classes = utils.load_classes(self.class_path)
+        self.classes = utils.load_classes(self.class_path)
         self.Tensor = torch.FloatTensor
 
         # About image color
@@ -57,7 +60,7 @@ class YoloDetectron():
         # run inference on the model and get detections
         with torch.no_grad():
             detections = self.model(input_img)
-            detections = utils.non_max_suppression(detections, 80, utils.conf_thres, utils.nms_thres)
+            detections = utils.non_max_suppression(detections, 80)
         return detections[0]
 
     def processing(self, frame):

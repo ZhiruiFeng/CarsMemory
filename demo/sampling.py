@@ -12,7 +12,7 @@ outtopic = "compressed_stream"
 
 class VideoCompressor(Process):
     def __init__(self):
-        super().init()
+        super().__init__()
         self.consumer = KafkaConsumer(
             intopic,
             bootstrap_servers=['localhost:9092']
@@ -25,6 +25,7 @@ class VideoCompressor(Process):
         for msg in self.consumer:
             if cnt % 10 == 0:
                 self.producer.send(outtopic, msg.value)
+                print('new frame')
             cnt += 1
 
 
