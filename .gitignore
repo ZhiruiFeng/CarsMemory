@@ -14,3 +14,6 @@ conf/
 
 # Hide the cluster machine settings for security purpose
 params.py
+
+# tmp file just used for temporary storage
+tmp/
