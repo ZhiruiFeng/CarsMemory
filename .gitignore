@@ -11,3 +11,6 @@ conf/
 
 # Ignore the weights of Neural Network Graph
 *.weights
+
+# Hide the cluster machine settings for security purpose
+params.py

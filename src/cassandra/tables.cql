@@ -1,5 +1,7 @@
+# Cassandra Schema for DashCash project.
+
 # KEYSPACE CREATION
-CREATE KEYSPACE dashcash WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3};
+CREATE KEYSPACE dashcash WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 2};
 
 # ENTER dashcash
 USE dashcash

@@ -1,0 +1,7 @@
+# Cluster Interface
+
+KAFKA_CLUSTER_DNS = ""
+KAFKA_PORT = 9092   # Default port for Kafka
+
+DB_CLUSTER_DNS = ""
+CASSANDRA_PORT = 9042   # Default port for Cassandra

@@ -1,8 +1,5 @@
-import sys
-sys.path.append("./")
-
-from processor.yolo.models import *
-from processor.yolo.utils import *
+from models.yolo.models import *
+from models.yolo.utils import *
 
 import cv2
 import os, sys, time, datetime, random
@@ -16,7 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from PIL import Image
 
-from processor.yolo.sort import *
+from models.yolo.sort import *
 
 
 class YoloDetectron():
@@ -24,9 +21,9 @@ class YoloDetectron():
     def __init__(self):
 
         # Basical setting related to the YOLO mdoel
-        self.config_path = '/home/ubuntu/workspace/CarsMemory/processor/yolo/config/yolov3.cfg'
-        self.weights_path = '/home/ubuntu/workspace/CarsMemory/processor/yolo/config/yolov3.weights'
-        self.class_path = '/home/ubuntu/workspace/CarsMemory/processor/yolo/config/coco.names'
+        self.config_path = '/home/ubuntu/workspace/CarsMemory/models/yolo/config/yolov3.cfg'
+        self.weights_path = '/home/ubuntu/workspace/CarsMemory/models/yolo/config/yolov3.weights'
+        self.class_path = '/home/ubuntu/workspace/CarsMemory/models/yolo/config/coco.names'
         self.img_size = 416
         self.conf_thres = 0.8
         self.nms_thres = 0.4
