@@ -2,3 +2,25 @@
 # db_writer.py
 
 """Write meta data into Cassandra"""
+
+from db_connector import CassandraConnector
+import datetime
+
+
+class DBWriter(object):
+
+    def __init__(self):
+        self.db = CassandraConnector()
+
+    def insert_to_frame(self, frameinfo):
+        dashcam_id = frameinfo['cam_id']
+        storage_link = frameinfo['storage_link']
+        obj_tags = frameinfo['obj_tags']
+        # Decide the generate time later
+        gen_date = datetime.date.today().strftime("%y-%m-%d")
+        store_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        insert_command = """INSERT INTO frame (dashcam_id, date, store_time, storage_link, obj_tags)
+            values (%s, %s, %s, %s, %s)""" % (dashcam_id, gen_date, store_time, storage_link, obj_tags)
+
+        self.db.execute(insert_command)
