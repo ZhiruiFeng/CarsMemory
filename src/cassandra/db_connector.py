@@ -13,5 +13,5 @@ class CassandraConnector(object):
         self.cluster = Cluster([DB_CLUSTER_HOSTNAME], port=CASSANDRA_PORT)
         self.session = self.cluster.connect(KEYSPACE)
 
-    def execute(self, sql_command):
-        return self.session.execute(sql_command)
+    def get_session(self):
+        return self.session

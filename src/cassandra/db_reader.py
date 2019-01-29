@@ -10,3 +10,4 @@ class DBReader(object):
 
     def __init__(self):
         self.db = CassandraConnector()
+        self.session = self.db.get_session()

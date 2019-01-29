@@ -11,8 +11,9 @@ class DBWriter(object):
 
     def __init__(self):
         self.db = CassandraConnector()
+        self.session = self.db.get_session()
 
-    def insert_to_frame(self, frameinfo):
+    def insert_new_to_frame(self, frameinfo):
         dashcam_id = frameinfo['cam_id']
         storage_link = frameinfo['storage_link']
         obj_tags = frameinfo['obj_tags']
@@ -20,7 +21,8 @@ class DBWriter(object):
         gen_date = datetime.date.today().strftime("%y-%m-%d")
         store_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        insert_command = """INSERT INTO frame (dashcam_id, date, store_time, storage_link, obj_tags)
-            values (%s, %s, %s, %s, %s)""" % (dashcam_id, gen_date, store_time, storage_link, obj_tags)
+        insert_command = ("INSERT INTO frame(dashcam_id, date, store_time,"
+                          "storage_link, obj_tags) values(%s, %s, %s, %s, %s)")
 
-        self.db.execute(insert_command)
+        value_list = [dashcam_id, gen_date, store_time, storage_link, obj_tags]
+        self.session.execute(insert_command, value_list)
