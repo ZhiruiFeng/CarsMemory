@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../../')
 from confluent_kafka import Producer, Consumer, KafkaError
 from src.params import KAFKA_BROKER
 
