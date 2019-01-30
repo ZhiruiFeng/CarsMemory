@@ -2,7 +2,7 @@
 # kafka.utils.py
 
 """Functions related to kafka communication"""
-import settings
+import src.kafka.settings as settings
 import os
 import numpy as np
 import base64
@@ -29,7 +29,7 @@ def set_topic(topic, replication=2, partitions=settings.SET_PARTITIONS):
     os.system(init_cmd)
 
 
-def clear_detection_topics(prediction_prefix=settings.PREDICTION_TOPIC_PREFIX):
+def clear_detection_topics(prediction_prefix):
     """Clear detection topics. Specific to Camera Number.
     :param prediction_prefix: Just a stamp for this class of topics
     """

@@ -12,5 +12,9 @@ if __name__ == "__main__":
     verbose = True
     pub_obj_key = "test"
     rr_distribute = False
-    producer = StreamVideo(url, topic, partitions, use_cv2, verbose, pub_obj_key, rr_distribute)
+    producer = StreamVideo(url, topic, partitions,
+                           use_cv2=use_cv2,
+                           verbose=verbose,
+                           pub_obj_key=pub_obj_key, 
+                           rr_distribute=rr_distribute)
     producer.start()
