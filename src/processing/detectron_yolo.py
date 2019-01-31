@@ -1,3 +1,8 @@
+"""
+This code using models on cluster, which needs large computing power.
+Now we deployed an Object Detection model on AWS Lambda,
+and accompied with Amazon API gateway, see obj_detector.py
+"""
 from models.yolo.models import *
 from models.yolo.utils import *
 

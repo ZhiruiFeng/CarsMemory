@@ -12,6 +12,8 @@ CASSANDRA_PORT = '9042'   # Default port for Cassandra
 SPARK_CLUSTER_DNS = ""
 SPARK_CLUSTER_HOSTNAME = ""
 
-
 # Default setting for database
 DB_KEYSPACE = ''
+
+# API for Object detection
+OBJ_API_URL = ''
