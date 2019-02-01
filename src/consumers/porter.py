@@ -6,7 +6,7 @@ import numpy as np
 import socket
 from multiprocessing import Process
 
-from src.kafka.utils import np_from_json, get_url_from_key
+from src.kafka.utils import np_from_json
 import src.params as params
 import src.kafka.settings as settings
 from src.awss3.writer_s3 import S3TmpWriter
@@ -26,6 +26,7 @@ class Porter(Process):
                  topic_partitions=8,
                  verbose=False,
                  rr_distribute=False,
+                 group_id="porter",
                  group=None,
                  target=None,
                  name=None):
@@ -38,6 +39,7 @@ class Porter(Process):
         :param scale: (0, 1] scale image before face recognition, but less accurate, trade off!!
         :param verbose: print logs on stdout
         :param rr_distribute:  use round robin partitioner and assignor, should be set same as respective producers or consumers.
+        :param group_id: kafka used to attribute topic partition
         :param group: group should always be None; it exists solely for compatibility with threading.
         :param target: Process Target
         :param name: Process name
@@ -51,6 +53,7 @@ class Porter(Process):
         self.topic_partitions = topic_partitions
         self.url_topic = url_topic
         self.rr_distribute = rr_distribute
+        self.group_id = group_id
         print("[INFO] I am ", self.iam)
         self.s3writer = S3TmpWriter(params.MY_BUCKET)
 
@@ -60,7 +63,7 @@ class Porter(Process):
             RangePartitionAssignor,
             RoundRobinPartitionAssignor]
 
-        porter_consumer = KafkaConsumer(group_id="porter", client_id=self.iam,
+        porter_consumer = KafkaConsumer(group_id=self.group_id, client_id=self.iam,
                                         bootstrap_servers=[params.KAFKA_BROKER],
                                         key_deserializer=lambda key: key.decode(),
                                         value_deserializer=lambda value: json.loads(value.decode()),
@@ -91,10 +94,12 @@ class Porter(Process):
                 for topic_partition, msgs in raw_frame_messages.items():
 
                     for msg in msgs:
-                        print(msg.value["frame_num"])
 
                         result = self.store_tmp_frame(msg.value)
-                        print(result['s3_url'])
+
+                        if self.verbose:
+                            print(result["frame_num"])
+                            print(result['s3_key'])
                         tp = TopicPartition(msg.topic, msg.partition)
                         offsets = {tp: OffsetAndMetadata(msg.offset, None)}
                         porter_consumer.commit(offsets=offsets)
@@ -115,6 +120,7 @@ class Porter(Process):
 
     def store_tmp_frame(self, frame_obj):
         """Processes value produced by producer, returns prediction with png image.
+        From here, the message don't contain the image
         :param frame_obj: frame dictionary with frame information and the frame
         :return: url_for the tmp file
         """
@@ -128,7 +134,9 @@ class Porter(Process):
 
         s3_key = self.s3writer.upload_public_delete_local(frame, cam_id, timestamp)
 
-        urldict = {'s3_url': get_url_from_key(s3_key)}
-        frame_obj.update(urldict)
+        urldict = {'s3_key': s3_key,
+                   'camera': cam_id,
+                   'timestamp': timestamp,
+                   'frame_num': frame_obj['frame_num']}
 
-        return frame_obj
+        return urldict

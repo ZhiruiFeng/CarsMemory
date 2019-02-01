@@ -73,7 +73,7 @@ class S3StoreWriter(object):
         obj = self.connector.get_object_with_key(tmp_key)
         obj.delete()
 
-    def move_tmp_obj(self, cam_id, timestamp):
+    def achive_tmp_obj(self, cam_id, timestamp):
         tmp_key = self._get_tmp_key(cam_id, timestamp)
         store_key = self._get_s3_key(cam_id, timestamp)
         self.connector.move_obj(tmp_key, store_key)

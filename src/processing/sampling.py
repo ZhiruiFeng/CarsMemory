@@ -3,13 +3,13 @@
 
 """To compress the incoming video streaming by sampling."""
 
-import cv2
-
 
 class VideoSampler(object):
 
     def __init__(self, cap, batch):
         self.batch = batch
+
+    def add_video(self, cap):
         self.cap = cap
 
     def read_img(self):

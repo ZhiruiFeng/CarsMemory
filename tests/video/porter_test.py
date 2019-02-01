@@ -17,7 +17,8 @@ if __name__ == "__main__":
                            url_topic=url_topic,
                            topic_partitions=topic_partitions,
                            verbose=verbose,
-                           rr_distribute=rr_distribute) for _ in range(4)]
+                           rr_distribute=rr_distribute,
+                           group_id="porter") for _ in range(4)]
     for p in porter_group:
         p.start()
 

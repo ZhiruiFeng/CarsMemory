@@ -32,7 +32,7 @@ def topic_is_alive(topic):
     """Util function to check exists of topic
     :param topic: topic for checking
     """
-    
+
     res = topic in get_topic_list()
     return res
 

@@ -6,7 +6,7 @@ from src.kafka.utils import clear_topic, set_topic
 
 
 if __name__ == "__main__":
-    url = 'http://s3-us-west-2.amazonaws.com/dashcash/dataset/train-14/videos/c4dab4e2-6c4805a2.mov'
+    url = 'http://s3-us-west-2.amazonaws.com/dashcash/dataset/samples-1k/videos/00091078-2bcd1ac9.mov'
     topic = "video_test_org"
     partitions = 1
     use_cv2 = True
