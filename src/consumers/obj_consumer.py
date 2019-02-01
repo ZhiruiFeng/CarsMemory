@@ -102,6 +102,9 @@ class ObjConsumer(Process):
                         # get pre processing result
                         result = self.get_processed_frame_object(msg.value)
 
+                        if self.verbose:
+                            print(result)
+
                         tp = TopicPartition(msg.topic, msg.partition)
                         offsets = {tp: OffsetAndMetadata(msg.offset, None)}
                         url_consumer.commit(offsets=offsets)

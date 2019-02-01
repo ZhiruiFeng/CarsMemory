@@ -95,8 +95,8 @@ class Extractor(Process):
         try:
             while True:
 
-                if self.verbose:
-                    print("[Extractor {}] WAITING FOR NEXT FRAMES..".format(socket.gethostname()))
+                #if self.verbose:
+                    #print("[Extractor {}] WAITING FOR NEXT FRAMES..".format(socket.gethostname()))
 
                 meta_messages = meta_consumer.poll(timeout_ms=10, max_records=10)
 
@@ -123,6 +123,10 @@ class Extractor(Process):
                         self.counter += new_cnt
 
                         result['is_keyframe'] = is_keyframe
+                        result['valuable'] = True
+                        if self.verbose:
+                            print("[Extractor done]")
+                            print(result)
 
                         tp = TopicPartition(msg.topic, msg.partition)
                         offsets = {tp: OffsetAndMetadata(msg.offset, None)}

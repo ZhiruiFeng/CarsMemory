@@ -70,12 +70,14 @@ class Librarian(Process):
         try:
             while True:
 
-                if self.verbose:
-                    print("[Librarian {}] WAITING FOR NEXT FRAMES..".format(socket.gethostname()))
+                #if self.verbose:
+                    # print("[Librarian {}] WAITING FOR NEXT FRAMES..".format(socket.gethostname()))
 
                 value_messages = value_consumer.poll(timeout_ms=10, max_records=10)
 
                 for topic_partition, msgs in value_messages.items():
+                    if self.verbose:
+                        print("[Librarian done]")
                     for msg in msgs:
                         msginfo = msg.value
                         cam_id = msginfo['camera']
@@ -84,6 +86,7 @@ class Librarian(Process):
                             self.librarian.achtive_tmp_obj(cam_id, timestamp)
                         else:
                             self.librarian.delete_tmp_obj(cam_id, timestamp)
+
 
                         tp = TopicPartition(msg.topic, msg.partition)
                         offsets = {tp: OffsetAndMetadata(msg.offset, None)}
