@@ -66,3 +66,11 @@ class S3Connector(object):
                 print("The object does not exist.")
             else:
                 raise
+
+    def move_obj_within(self, from_key, to_key):
+        copy_source = {
+            'Bucket': self.bucket_name,
+            'Key': from_key
+        }
+        self.resource.Object(self.bucket_name, to_key).copy(copy_source)
+        self.resource.Object(self.bucket_name, from_key).delete()

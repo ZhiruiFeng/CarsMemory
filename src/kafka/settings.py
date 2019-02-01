@@ -6,7 +6,7 @@ ZOOKEEPER_PORT = '2181'
 KAFKA_BIN = "/usr/local/kafka/bin/"
 
 """Topic name and Prefix"""
-
+ORIGINAL_PREFIX = 'original'
 
 """Performance Parameters"""
 # USE RAW CV2 STREAMING or FAST BUT LESS FRAMES

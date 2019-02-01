@@ -3,7 +3,7 @@
 
 """Functions related to kafka communication"""
 import src.kafka.settings as settings
-from src.params import KAFKA_CLUSTER_HOSTNAME, KAFKA_BROKER
+from src.params import KAFKA_CLUSTER_HOSTNAME, KAFKA_BROKER, URL_PREFIX
 
 import os
 import numpy as np
@@ -107,5 +107,14 @@ def np_from_json(obj, prefix_name=""):
 
 
 #######################
-# Consumers
+# Consumers Template
 #######################
+
+
+#######################
+# About S3 file access
+#######################
+
+def get_url_from_key(s3_key):
+    """"Current we use this url to access file on S3 directly"""
+    return URL_PREFIX + s3_key
