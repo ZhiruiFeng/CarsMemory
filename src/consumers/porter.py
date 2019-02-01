@@ -6,7 +6,7 @@ import numpy as np
 import socket
 from multiprocessing import Process
 
-from src.kafka.utils import np_from_json, np_to_json, get_url_from_key
+from src.kafka.utils import np_from_json, get_url_from_key
 import src.params as params
 import src.kafka.settings as settings
 from src.awss3.writer_s3 import S3TmpWriter
@@ -24,7 +24,6 @@ class Porter(Process):
                  frame_topic,
                  url_topic,
                  topic_partitions=8,
-                 scale=1.0,
                  verbose=False,
                  rr_distribute=False,
                  group=None,
@@ -49,7 +48,6 @@ class Porter(Process):
         self.frame_topic = frame_topic
 
         self.verbose = verbose
-        self.scale = scale
         self.topic_partitions = topic_partitions
         self.url_topic = url_topic
         self.rr_distribute = rr_distribute
@@ -114,16 +112,16 @@ class Porter(Process):
 
     def store_tmp_frame(self, frame_obj):
         """Processes value produced by producer, returns prediction with png image.
-        :param frame_obj: frame dictionary with frame information and frame itself
+        :param frame_obj: frame dictionary with frame information and the frame
         :return: url_for the tmp file
         """
-
-        frame = np_from_json(frame_obj, prefix_name=settings.ORIGINAL_PREFIX)  # frame_obj = json
-        # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+        # frame_obj = json
+        frame = np_from_json(frame_obj, prefix_name=settings.ORIGINAL_PREFIX)
+        # Convert the image from BGR color (which OpenCV uses) to RGB color
         frame = cv2.cvtColor(frame.astype(np.uint8), cv2.COLOR_BGR2RGB)
 
-        cam_id = ""
-        timestamp = ""
+        cam_id = frame_obj['camera']
+        timestamp = frame_obj['timestamp']
 
         s3_key = self.s3writer.upload_public_delete_local(frame, cam_id, timestamp)
 

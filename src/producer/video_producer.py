@@ -21,6 +21,7 @@ from kafka import KafkaProducer, TopicPartition
 from kafka.partitioner import RoundRobinPartitioner, Murmur2Partitioner
 import src.params as params
 from src.kafka.utils import np_to_json
+from src.utils import get_curtimestamp_millis
 
 
 class StreamVideo(Process):
@@ -53,6 +54,8 @@ class StreamVideo(Process):
         self.frame_topic = topic
         self.topic_partitions = topic_partitions
         # Get the camera_num for the steam name
+        print("The name of this process")
+        print(self.name)
         self.camera_num = int(re.findall(r"StreamVideo-([0-9]*)", self.name)[0])
         self.use_cv2 = use_cv2
         self.object_key = pub_obj_key
@@ -142,7 +145,7 @@ class StreamVideo(Process):
         return True if frame_num > 0 else False
 
     @staticmethod
-    def transform(frame, frame_num, object_key="original", camera=0, verbose=False):
+    def transform(frame, frame_num, object_key, camera=0, verbose=False):
         """Serialize frame, create json message with serialized frame, camera number and timestamp.
         :param frame: numpy.ndarray, raw frame
         :param frame_num: frame number in the particular video/camera
@@ -161,7 +164,7 @@ class StreamVideo(Process):
         # serialize frame
         frame_dict = np_to_json(frame.astype(np.uint8), prefix_name=object_key)
         # Metadata for frame
-        message = {"timestamp": time.time(), "camera": camera, "frame_num": frame_num}
+        message = {"timestamp": get_curtimestamp_millis(), "camera": camera, "frame_num": frame_num}
         # add frame and metadata related to frame
         message.update(frame_dict)
 

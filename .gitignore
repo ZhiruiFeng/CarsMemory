@@ -17,3 +17,6 @@ params.py
 
 # tmp file just used for temporary storage
 tmp/
+
+# Line counter
+line-count.txt
