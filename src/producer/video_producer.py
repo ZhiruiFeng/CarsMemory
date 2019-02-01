@@ -84,7 +84,8 @@ class StreamVideo(Process):
         frame_producer = KafkaProducer(bootstrap_servers=[params.KAFKA_BROKER],
                                        key_serializer=lambda key: str(key).encode(),
                                        value_serializer=lambda value: json.dumps(value).encode(),
-                                       partitioner=partitioner)
+                                       partitioner=partitioner,
+                                       max_request_size = 134217728)
 
         print("[CAM {}] URL: {}, SET PARTITIONS FOR FRAME TOPIC: {}".format(self.camera_num,
                                                                             self.video_path,
@@ -121,13 +122,24 @@ class StreamVideo(Process):
                                      object_key=self.object_key,
                                      camera=self.camera_num,
                                      verbose=self.verbose)
+            
+            def on_send_success(record_metadata):
+                print(record_metadata.topic)
+                print(record_metadata.partition)
+                print(record_metadata.offset)
+
+            def on_send_error(excp):
+                print(excp)
+                log.error('I am an errback', exc_info=excp)
+            
             #  Partition to be sent to
             part = frame_num % self.topic_partitions
             # Logging
             if self.verbose:
                 print("\r[PRODUCER][Cam {}] FRAME: {} TO PARTITION: {}".format(message["camera"], frame_num, part))
             # Publish to specific partition
-            frame_producer.send(self.frame_topic, key="{}_{}".format(self.camera_num, frame_num), value=message)
+            print(sys.getsizeof(message))
+            frame_producer.send(self.frame_topic, key="{}_{}".format(self.camera_num, frame_num), value=message).add_callback(on_send_success).add_errback(on_send_error)
 
             # if frame_num % 1000 == 0:
             frame_producer.flush()

@@ -32,7 +32,9 @@ def topic_is_alive(topic):
     """Util function to check exists of topic
     :param topic: topic for checking
     """
-    return topic in get_topic_list()
+    
+    res = topic in get_topic_list()
+    return res
 
 
 def clear_topic(topic):
@@ -68,7 +70,9 @@ def set_topic(topic, replication=2, partitions=settings.SET_PARTITIONS):
             "--partitions",
             str(partitions),
             "--topic",
-            str(topic)]
+            str(topic),
+            "--config",
+            "max.message.bytes=67108864"]
     init_cmd = " ".join(args)
     print("\n", init_cmd, "\n")
     os.system(init_cmd)

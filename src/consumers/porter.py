@@ -82,6 +82,7 @@ class Porter(Process):
                                                  key_serializer=lambda key: str(key).encode(),
                                                  value_serializer=lambda value: json.dumps(value).encode(),
                                                  partitioner=partitioner)
+        print("started", self.iam)
         try:
             while True:
                 if self.verbose:
@@ -90,8 +91,10 @@ class Porter(Process):
                 for topic_partition, msgs in raw_frame_messages.items():
 
                     for msg in msgs:
+                        print(msg.value["frame_num"])
 
                         result = self.store_tmp_frame(msg.value)
+                        print(result['s3_url'])
                         tp = TopicPartition(msg.topic, msg.partition)
                         offsets = {tp: OffsetAndMetadata(msg.offset, None)}
                         porter_consumer.commit(offsets=offsets)

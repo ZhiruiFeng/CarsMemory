@@ -3,7 +3,7 @@
 
 """Write data to AWS S3"""
 
-from connector_s3 import S3Connector
+from src.awss3.connector_s3 import S3Connector
 import cv2
 import os
 from src.params import TMP_KEY_PREFIX, STORE_KEY_PREFIX, TMP_FOLER
@@ -18,7 +18,7 @@ class S3TmpWriter(object):
         self.key_prefix = TMP_KEY_PREFIX
 
     def _get_tmp_key(self, cam_id, timestamp):
-        return self.key_prefix + '/' + cam_id + '/' + str(timestamp) + '.jpg'
+        return self.key_prefix + str(cam_id) + '/' + str(timestamp) + '.jpg'
 
     def _write_local_file(self, img, timestamp):
         tmp_folder = TMP_FOLER
@@ -63,10 +63,10 @@ class S3StoreWriter(object):
 
     def _get_s3_key(self, cam_id, timestamp):
         str_today = get_date_from_timestamp(timestamp)
-        return self.key_prefix + '/' + str_today + '/' + cam_id + '/'
+        return self.key_prefix + str_today + '/' + str(cam_id) + '/'
 
     def _get_tmp_key(self, cam_id, timestamp):
-        return TMP_KEY_PREFIX + '/' + cam_id + '/' + str(timestamp) + '.jpg'
+        return TMP_KEY_PREFIX + str(cam_id) + '/' + str(timestamp) + '.jpg'
 
     def delete_tmp_obj(self, cam_id, timestamp):
         tmp_key = self._get_tmp_key(cam_id, timestamp)

@@ -11,6 +11,7 @@ if __name__ == "__main__":
     topic_partitions = 8
     verbose = False
     rr_distribute = False
+    set_topic("video_test_org", partitions=16)
     set_topic(url_topic, partitions=topic_partitions)
     porter_group = [Porter(frame_topic=frame_topic,
                            url_topic=url_topic,
