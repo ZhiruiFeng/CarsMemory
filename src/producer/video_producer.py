@@ -24,7 +24,7 @@ from src.kafka.utils import np_to_json
 from src.utils import get_curtimestamp_millis
 import src.processing.cvutils as cvutils
 import src.kafka.settings as settings
-from processing.sampling import VideoSampler
+from src.processing.sampling import VideoSampler
 
 
 class StreamVideo(Process):

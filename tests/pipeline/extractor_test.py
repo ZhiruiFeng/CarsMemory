@@ -15,7 +15,7 @@ if __name__ == "__main__":
     verbose = True
     rr_distribute = False
     set_topic(value_topic, partitions=topic_partitions)
-    porter_group = [Extractor(obj_topic=obj_topic,
+    porter_group = [Extractor(meta_topic=obj_topic,
                            value_topic=value_topic,
                            topic_partitions=topic_partitions,
                            verbose=verbose,

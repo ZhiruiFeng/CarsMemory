@@ -6,13 +6,13 @@
 
 class VideoSampler(object):
 
-    def __init__(self, cap, batch):
+    def __init__(self, batch):
         self.batch = batch
 
     def add_video(self, cap):
         self.cap = cap
 
-    def read_img(self):
+    def read(self):
         success, image = self.cap.read()
         if not success:
             return None
@@ -20,4 +20,4 @@ class VideoSampler(object):
         while success and cnt < self.batch:
             success, image = self.cap.read()
             cnt += 1
-        return image
+        return success, image

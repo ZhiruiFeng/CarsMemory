@@ -3,7 +3,7 @@
 
 """Write meta data into Cassandra"""
 
-from db_connector import CassandraConnector
+from src.cassandra.db_connector import CassandraConnector
 from src.kafka.utils import get_url_from_key, get_s3_key
 from src.utils import get_date_from_timestamp
 
@@ -20,7 +20,7 @@ class DBWriter(object):
         date = get_date_from_timestamp(timestamp)
         s3_key = get_s3_key(camid, timestamp)
         storage_link = get_url_from_key(s3_key)
-        is_keyframe = msginfo['keyframe']
+        is_keyframe = msginfo['is_keyframe']
         obj_tags = msginfo['objs']
 
         insert_command = ("INSERT INTO frame(dashcam_id, date, store_time, is_keyframe"

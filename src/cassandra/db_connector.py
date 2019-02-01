@@ -4,7 +4,7 @@
 """Connector to Cassandra"""
 
 from cassandra.cluster import Cluster
-from ..params import DB_CLUSTER_HOSTNAME, CASSANDRA_PORT, DB_KEYSPACE
+from src.params import DB_CLUSTER_HOSTNAME, CASSANDRA_PORT, DB_KEYSPACE
 
 
 class CassandraConnector(object):

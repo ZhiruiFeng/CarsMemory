@@ -111,7 +111,7 @@ class Extractor(Process):
                     for msg in msgs:
                         # get pre processing result
                         result = msg.value
-                        new_obj_format, new_cnt = parse_objs(result)
+                        new_obj_format, new_cnt = parse_objs(result['objs'])
                         result['objs'] = new_obj_format
                         # A easy version of key_frame extractor
                         is_keyframe = False
