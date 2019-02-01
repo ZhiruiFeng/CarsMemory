@@ -30,8 +30,8 @@ CREATE TABLE frame (
 INSERT INTO frame (dashcam_id, date, store_time, storage_link, obj_tags)
 values (
     'test_cam',
-    '2019-01-25',
-    '2019-01-25 02:21:00',
+    '2019-02-01',
+    '1549015332922',
     'http://test.com',
     {1:{class:'car', x1:0, y1:0, x2:100, y2:100}}
 )

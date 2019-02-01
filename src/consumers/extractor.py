@@ -13,7 +13,9 @@ from kafka.coordinator.assignors.range import RangePartitionAssignor
 from kafka.coordinator.assignors.roundrobin import RoundRobinPartitionAssignor
 from kafka.partitioner import RoundRobinPartitioner, Murmur2Partitioner
 from kafka.structs import OffsetAndMetadata, TopicPartition
-
+from src.processing.keyframes import parse_objs
+from collections import Counter
+import time
 
 class Extractor(Process):
 
@@ -51,6 +53,8 @@ class Extractor(Process):
         self.value_topic = value_topic
         self.rr_distribute = rr_distribute
         self.group_id = group_id
+        self.counter = Counter()
+        self.timer = time.time()
         print("[INFO] I am ", self.iam)
 
     def run(self):
@@ -87,6 +91,7 @@ class Extractor(Process):
                                        key_serializer=lambda key: str(key).encode(),
                                        value_serializer=lambda value: json.dumps(value).encode(),
                                        partitioner=partitioner)
+        history_cnt = None
         try:
             while True:
 
@@ -97,19 +102,34 @@ class Extractor(Process):
 
                 for topic_partition, msgs in meta_messages.items():
 
+                    if time.time() - self.timer > 600:
+                        self.update_acc_table()
+                        self.counter = Counter()
+                        self.timer = time.time()
+
                     # Get the predicted Object, JSON with frame and meta info about the frame
                     for msg in msgs:
                         # get pre processing result
-                        result = self.get_keyframes(msg.value)
+                        result = msg.value
+                        new_obj_format, new_cnt = parse_objs(result)
+                        result['objs'] = new_obj_format
+                        # A easy version of key_frame extractor
+                        is_keyframe = False
+                        if not history_cnt:
+                            is_keyframe = True
+                        elif not history_cnt == new_cnt:
+                            is_keyframe = True
+
+                        self.counter += new_cnt
+
+                        result['is_keyframe'] = is_keyframe
 
                         tp = TopicPartition(msg.topic, msg.partition)
                         offsets = {tp: OffsetAndMetadata(msg.offset, None)}
                         meta_consumer.commit(offsets=offsets)
 
                         # Partition to be sent to
-                        value_producer.send(self.value_topic,
-                                            key="{}_{}".format(result["camera"], result["frame_num"]),
-                                            value=result)
+                        value_producer.send(self.value_topic, value=result)
 
                     value_producer.flush()
 
@@ -121,8 +141,5 @@ class Extractor(Process):
             print("Closing Stream")
             meta_consumer.close()
 
-    @staticmethod
-    def get_keyframes(msginfo):
-        """Get key frames and valuable information"""
-
-        return msginfo
+    def update_acc_table(self):
+        pass

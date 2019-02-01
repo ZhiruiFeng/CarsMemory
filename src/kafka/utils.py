@@ -9,7 +9,8 @@ import os
 import numpy as np
 import base64
 import subprocess
-# from heapq import heappush, heappop
+from src.utils import get_date_from_timestamp
+from src.params import STORE_KEY_PREFIX
 
 
 #######################
@@ -122,3 +123,8 @@ def np_from_json(obj, prefix_name=""):
 def get_url_from_key(s3_key):
     """"Current we use this url to access file on S3 directly"""
     return URL_PREFIX + s3_key
+
+
+def get_s3_key(cam_id, timestamp):
+    str_today = get_date_from_timestamp(timestamp)
+    return STORE_KEY_PREFIX + str_today + '/' + str(cam_id) + '/'

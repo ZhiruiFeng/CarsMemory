@@ -69,7 +69,6 @@ class DBSinker(Process):
 
         try:
             while True:
-
                 if self.verbose:
                     print("[Librarian {}] WAITING FOR NEXT FRAMES..".format(socket.gethostname()))
 
@@ -78,8 +77,7 @@ class DBSinker(Process):
                 for topic_partition, msgs in value_messages.items():
                     for msg in msgs:
                         msginfo = msg.value
-                        # TODO
-
+                        self.sinker.insert_new_to_frame(msginfo)
                         tp = TopicPartition(msg.topic, msg.partition)
                         offsets = {tp: OffsetAndMetadata(msg.offset, None)}
                         value_consumer.commit(offsets=offsets)

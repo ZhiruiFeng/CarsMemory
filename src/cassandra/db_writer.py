@@ -4,7 +4,8 @@
 """Write meta data into Cassandra"""
 
 from db_connector import CassandraConnector
-import datetime
+from src.kafka.utils import get_url_from_key, get_s3_key
+from src.utils import get_date_from_timestamp
 
 
 class DBWriter(object):
@@ -13,16 +14,17 @@ class DBWriter(object):
         self.db = CassandraConnector()
         self.session = self.db.get_session()
 
-    def insert_new_to_frame(self, frameinfo):
-        dashcam_id = frameinfo['cam_id']
-        storage_link = frameinfo['storage_link']
-        obj_tags = frameinfo['obj_tags']
-        # Decide the generate time later
-        gen_date = datetime.date.today().strftime("%y-%m-%d")
-        store_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    def insert_new_to_frame(self, msginfo):
+        camid = msginfo['camera']
+        timestamp = msginfo['timestamp']
+        date = get_date_from_timestamp(timestamp)
+        s3_key = get_s3_key(camid, timestamp)
+        storage_link = get_url_from_key(s3_key)
+        is_keyframe = msginfo['keyframe']
+        obj_tags = msginfo['objs']
 
-        insert_command = ("INSERT INTO frame(dashcam_id, date, store_time,"
-                          "storage_link, obj_tags) values(%s, %s, %s, %s, %s)")
+        insert_command = ("INSERT INTO frame(dashcam_id, date, store_time, is_keyframe"
+                          "storage_link, obj_tags) values(%s, %s, %s, %s, %s, %s)")
 
-        value_list = [dashcam_id, gen_date, store_time, storage_link, obj_tags]
+        value_list = [camid, date, timestamp, is_keyframe, storage_link, obj_tags]
         self.session.execute(insert_command, value_list)

@@ -130,5 +130,5 @@ class ObjConsumer(Process):
         s3_key = msginfo['s3_key']
         s3_url = get_url_from_key(s3_key)
         objs = detect_object(s3_url)
-        msginfo.update(objs)
+        msginfo['objs'] = objs
         return msginfo
