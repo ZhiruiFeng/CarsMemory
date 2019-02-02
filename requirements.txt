@@ -1,0 +1,10 @@
+opencv-python
+numpy
+scikit-learn
+scipy
+imutils
+scikit-image
+kafka-python
+opencv-contrib-python
+flask
+cassandra-driver

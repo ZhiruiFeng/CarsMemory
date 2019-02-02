@@ -83,10 +83,8 @@ class Librarian(Process):
                         cam_id = msginfo['camera']
                         timestamp = msginfo['timestamp']
                         if msginfo['valuable']:
-                            print('is valuable')
-                            self.librarian.achive_tmp_obj(cam_id, timestamp)
+                            self.librarian.archive_tmp_obj(cam_id, timestamp)
                         else:
-                            print('is not valuable')
                             self.librarian.delete_tmp_obj(cam_id, timestamp)
 
 

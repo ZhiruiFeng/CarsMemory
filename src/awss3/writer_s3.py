@@ -8,6 +8,7 @@ import os
 from src.params import TMP_KEY_PREFIX, STORE_KEY_PREFIX, TMP_FOLER
 from src.utils import get_date_from_timestamp
 from src.awss3.connector_s3 import S3Connector
+import botocore
 
 
 class S3TmpWriter(object):
@@ -63,17 +64,23 @@ class S3StoreWriter(object):
 
     def _get_s3_key(self, cam_id, timestamp):
         str_today = get_date_from_timestamp(timestamp)
-        return self.key_prefix + str_today + '/' + str(cam_id) + '/'
+        return self.key_prefix + str_today + '/' + str(cam_id) + '/' + str(timestamp) + '.jpg'
 
     def _get_tmp_key(self, cam_id, timestamp):
         return TMP_KEY_PREFIX + str(cam_id) + '/' + str(timestamp) + '.jpg'
 
     def delete_tmp_obj(self, cam_id, timestamp):
-        tmp_key = self._get_tmp_key(cam_id, timestamp)
-        obj = self.connector.get_object_with_key(tmp_key)
-        obj.delete()
+        try:
+            tmp_key = self._get_tmp_key(cam_id, timestamp)
+            obj = self.connector.get_object_with_key(tmp_key)
+            obj.delete()
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == "404":
+                print("The object does not exist.")
+            else:
+                raise
 
-    def achive_tmp_obj(self, cam_id, timestamp):
+    def archive_tmp_obj(self, cam_id, timestamp):
         tmp_key = self._get_tmp_key(cam_id, timestamp)
         store_key = self._get_s3_key(cam_id, timestamp)
         self.connector.move_obj_within(tmp_key, store_key)
