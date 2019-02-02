@@ -53,7 +53,7 @@ Finally, from a production perspective, we plan to realize connecting the system
   * Selectively archive data according to the feature distribution report
 
 ![Challenges Tackling](./images/challenge.png)
-About figure shows the detail design for solving these two challenges.
+Above figure shows the detail design for solving these two challenges.
 
 **Some facts about the challenges we encountered**
 1. The incoming video streaming has huge throughput, the size of frames is large than normal text files.
@@ -78,7 +78,7 @@ In summary:
 
 ### Project File Architecture
 
-![File Architecture](./images/architecture.png)
+<img src="./images/architecture.png" height="225" width="500" />
 
 Above shows how the project code base is arranged.
 
