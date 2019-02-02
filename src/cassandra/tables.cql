@@ -8,32 +8,33 @@ USE dashcash
 
 # TYPE tag CREATION
 CREATE TYPE object (
-    class text,
-    x1 int,
-    y1 int,
-    x2 int,
-    y2 int
+    class_name text,
+    x1 float,
+    y1 float,
+    x2 float,
+    y2 float
 );
 
 # TABLE frame CREATION
 CREATE TABLE frame (
     dashcam_id text,
-    date text,
+    store_date text,
     store_time timestamp,
     is_keyframe boolean,
     storage_link text,
     obj_tags map<int, frozen<object>>,
-    PRIMARY KEY ((dashcam_id, data), store_time)
+    PRIMARY KEY ((dashcam_id, store_date), store_time)
 );
 
 # SAMPLE INSERT
-INSERT INTO frame (dashcam_id, date, store_time, storage_link, obj_tags)
+INSERT INTO frame (dashcam_id, store_date, store_time, is_keyframe, storage_link, obj_tags)
 values (
     'test_cam',
-    '2019-02-01',
-    '1549015332922',
+    '20190201',
+    '1549015332929',
+    False,
     'http://test.com',
-    {1:{class:'car', x1:0, y1:0, x2:100, y2:100}}
+    {1:{class_name:'car', x2:0.1, y1:0.1, x1:100.0, y2:100.0}}
 )
 
 # ADD obj_tags

@@ -12,11 +12,11 @@ def parse_objs(objs):
     number = 1
     for item in objs:
         obj_class = item['class']
-        obj_name = item['name'].split(':')[-1]
+        obj_name = item['name'].split(':')[1]
         obj_name = obj_name.strip()
         cnt[obj_class] += 1
         x1, y1, x2, y2 = item['box']
-        new_obj = {'class': obj_class,
+        new_obj = {'class_name': obj_name,
                    'x1': x1,
                    'y1': y1,
                    'x2': x2,

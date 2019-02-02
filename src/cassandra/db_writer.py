@@ -6,6 +6,8 @@
 from src.cassandra.db_connector import CassandraConnector
 from src.kafka.utils import get_url_from_key, get_s3_key
 from src.utils import get_date_from_timestamp
+import json
+from cassandra import RequestExecutionException
 
 
 class DBWriter(object):
@@ -15,16 +17,23 @@ class DBWriter(object):
         self.session = self.db.get_session()
 
     def insert_new_to_frame(self, msginfo):
-        camid = msginfo['camera']
+        """This greatly related to format parsed by parse_objs funciton in keyframes.py"""
+
+        camid = 'dashcam_' + str(msginfo['camera'])
         timestamp = msginfo['timestamp']
-        date = get_date_from_timestamp(timestamp)
+        store_date = get_date_from_timestamp(timestamp)
         s3_key = get_s3_key(camid, timestamp)
-        storage_link = get_url_from_key(s3_key)
-        is_keyframe = msginfo['is_keyframe']
-        obj_tags = msginfo['objs']
 
-        insert_command = ("INSERT INTO frame(dashcam_id, date, store_time, is_keyframe"
-                          "storage_link, obj_tags) values(%s, %s, %s, %s, %s, %s)")
+        insert_json = {}
+        insert_json['dashcam_id'] = camid
+        insert_json['store_date'] = store_date
+        insert_json['store_time'] = timestamp
+        insert_json['is_keyframe'] = msginfo['is_keyframe']
+        insert_json['storage_link'] = get_url_from_key(s3_key)
+        insert_json['obj_tags'] = msginfo['objs']
 
-        value_list = [camid, date, timestamp, is_keyframe, storage_link, obj_tags]
-        self.session.execute(insert_command, value_list)
+        insert_command = 'INSERT INTO frame JSON \'' + json.dumps(insert_json) + '\'';
+        try:
+            self.session.execute(insert_command)
+        except RequestExecutionException:
+            print('Executation error.')
