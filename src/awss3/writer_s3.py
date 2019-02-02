@@ -3,11 +3,11 @@
 
 """Write data to AWS S3"""
 
-from src.awss3.connector_s3 import S3Connector
 import cv2
 import os
 from src.params import TMP_KEY_PREFIX, STORE_KEY_PREFIX, TMP_FOLER
 from src.utils import get_date_from_timestamp
+from src.awss3.connector_s3 import S3Connector
 
 
 class S3TmpWriter(object):
