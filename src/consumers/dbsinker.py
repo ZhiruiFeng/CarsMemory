@@ -16,7 +16,6 @@ class DBSinker(Process):
 
     def __init__(self,
                  value_topic,
-                 topic_partitions=8,
                  verbose=False,
                  rr_distribute=False,
                  group_id="sinker",
@@ -43,7 +42,6 @@ class DBSinker(Process):
         self.value_topic = value_topic
 
         self.verbose = verbose
-        self.topic_partitions = topic_partitions
         self.rr_distribute = rr_distribute
         self.group_id = group_id
         self.sinker = DBWriter()
@@ -69,8 +67,8 @@ class DBSinker(Process):
 
         try:
             while True:
-                #if self.verbose:
-                    #print("[Librarian {}] WAITING FOR NEXT FRAMES..".format(socket.gethostname()))
+                if self.verbose:
+                    print("[Librarian {}] WAITING FOR NEXT FRAMES..".format(self.iam))
 
                 value_messages = value_consumer.poll(timeout_ms=10, max_records=10)
 
@@ -79,6 +77,7 @@ class DBSinker(Process):
                         print("[Sinker done]")
                     for msg in msgs:
                         msginfo = msg.value
+                        # msginfo = json.loads(msginfo)
                         if msginfo['valuable']:
                             self.sinker.insert_new_to_frame(msginfo)
                         tp = TopicPartition(msg.topic, msg.partition)

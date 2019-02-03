@@ -7,6 +7,8 @@ from collections import Counter
 
 
 def parse_objs(objs):
+    if not objs:
+        return None, Counter()
     cnt = Counter()
     res = {}
     number = 1

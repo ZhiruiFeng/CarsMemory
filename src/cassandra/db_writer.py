@@ -34,6 +34,6 @@ class DBWriter(object):
 
         insert_command = 'INSERT INTO frame JSON \'' + json.dumps(insert_json) + '\'';
         try:
-            self.session.execute(insert_command)
-        except RequestExecutionException:
+            res = self.session.execute(insert_command)
+        except:
             print('Executation error.')
