@@ -11,7 +11,7 @@ if __name__ == "__main__":
     obj_topic = "obj_test_1"
     group_id = "objconsumer"
     topic_partitions = 16
-    verbose = True
+    verbose = False
     rr_distribute = False
     set_topic(obj_topic, partitions=topic_partitions)
     porter_group = [ObjConsumer(url_topic=url_topic,
@@ -19,7 +19,7 @@ if __name__ == "__main__":
                            topic_partitions=topic_partitions,
                            verbose=verbose,
                            rr_distribute=rr_distribute,
-                           group_id=group_id) for _ in range(4)]
+                           group_id=group_id) for _ in range(16)]
     for p in porter_group:
         p.start()
 

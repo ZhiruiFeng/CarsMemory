@@ -18,7 +18,7 @@ if __name__ == "__main__":
                            topic_partitions=topic_partitions,
                            verbose=verbose,
                            rr_distribute=rr_distribute,
-                           group_id="porter") for _ in range(4)]
+                           group_id="porter") for _ in range(16)]
     for p in porter_group:
         p.start()
 
