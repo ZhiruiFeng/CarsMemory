@@ -8,3 +8,4 @@ kafka-python
 opencv-contrib-python
 flask
 cassandra-driver
+boto3
