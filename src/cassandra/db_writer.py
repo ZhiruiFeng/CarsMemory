@@ -31,9 +31,10 @@ class DBWriter(object):
         insert_json['is_keyframe'] = msginfo['is_keyframe']
         insert_json['storage_link'] = get_url_from_key(s3_key)
         insert_json['obj_tags'] = msginfo['objs']
+        insert_json['scenes'] = msginfo['scenes']
 
-        insert_command = 'INSERT INTO frame JSON \'' + json.dumps(insert_json) + '\'';
+        insert_command = 'INSERT INTO frames JSON \'' + json.dumps(insert_json) + '\'';
         try:
-            res = self.session.execute(insert_command)
+            self.session.execute(insert_command)
         except:
             print('Executation error.')

@@ -5,6 +5,7 @@ import json
 import src.params as params
 import src.kafka.settings as settings
 from src.processing.objdetector import detect_object
+from src.processing.scenedetector import detect_scene_algorithmia
 from src.kafka.utils import get_url_from_key
 
 from multiprocessing import Process
@@ -13,6 +14,7 @@ from kafka.coordinator.assignors.range import RangePartitionAssignor
 from kafka.coordinator.assignors.roundrobin import RoundRobinPartitionAssignor
 from kafka.partitioner import RoundRobinPartitioner, Murmur2Partitioner
 from kafka.structs import OffsetAndMetadata, TopicPartition
+import time
 
 
 class ObjConsumer(Process):
@@ -51,6 +53,9 @@ class ObjConsumer(Process):
         self.obj_topic = obj_topic
         self.rr_distribute = rr_distribute
         self.group_id = group_id
+        self.timer = time.time()
+        self.cnt = -1
+        self.latency_period = 10
         print("[INFO] I am ", self.iam)
 
     def run(self):
@@ -100,7 +105,19 @@ class ObjConsumer(Process):
                     # Get the predicted Object, JSON with frame and meta info about the frame
                     for msg in msgs:
                         # get pre processing result
+                        if self.cnt < 0:
+                            self.timer = time.time()
+                            self.cnt = 0
                         result = self.get_processed_frame_object(msg.value)
+
+                        # Calculate latency:
+                        self.cnt += 1
+
+                        if self.cnt == self.latency_period:
+                            latency = time.time() - self.timer / float(self.latency_period)
+                            self.timer = time.time()
+                            self.cnt = 0
+                            print("[Detection] Latency {}".format(latency))
 
                         if self.verbose:
                             print(result)
@@ -132,6 +149,10 @@ class ObjConsumer(Process):
         """
         s3_key = msginfo['s3_key']
         s3_url = get_url_from_key(s3_key)
+        # To detect objects
         objs = detect_object(s3_url)
+        # To detect secenes
+        scene = detect_scene_algorithmia(s3_url)
         msginfo['objs'] = objs
+        msginfo['scenes'] = scene['predictions']
         return msginfo

@@ -13,7 +13,7 @@ from kafka.coordinator.assignors.range import RangePartitionAssignor
 from kafka.coordinator.assignors.roundrobin import RoundRobinPartitionAssignor
 from kafka.partitioner import RoundRobinPartitioner, Murmur2Partitioner
 from kafka.structs import OffsetAndMetadata, TopicPartition
-from src.processing.keyframes import parse_objs
+from src.processing.keyframes import parse_objs, parse_scene
 from collections import Counter
 import time
 
@@ -95,9 +95,6 @@ class Extractor(Process):
         try:
             while True:
 
-                #if self.verbose:
-                    #print("[Extractor {}] WAITING FOR NEXT FRAMES..".format(socket.gethostname()))
-
                 meta_messages = meta_consumer.poll(timeout_ms=10, max_records=10)
 
                 for topic_partition, msgs in meta_messages.items():
@@ -110,9 +107,12 @@ class Extractor(Process):
                     # Get the predicted Object, JSON with frame and meta info about the frame
                     for msg in msgs:
                         # get pre processing result
+                        # TODO need to add a buffer for ordering message from different partitions
                         result = msg.value
                         new_obj_format, new_cnt = parse_objs(result['objs'])
+                        scene_lists = parse_scene(result['scenes'])
                         result['objs'] = new_obj_format
+                        result['scenes'] = scene_lists
                         # A easy version of key_frame extractor
                         is_keyframe = False
                         if not history_cnt:

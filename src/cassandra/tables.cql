@@ -16,13 +16,14 @@ CREATE TYPE object (
 );
 
 # TABLE frame CREATION
-CREATE TABLE frame (
+CREATE TABLE frames (
     dashcam_id text,
     store_date text,
     store_time timestamp,
     is_keyframe boolean,
     storage_link text,
     obj_tags map<int, frozen<object>>,
+    sceces list<text>,
     PRIMARY KEY ((dashcam_id, store_date), store_time)
 );
 
