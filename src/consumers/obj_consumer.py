@@ -114,7 +114,7 @@ class ObjConsumer(Process):
                         self.cnt += 1
 
                         if self.cnt == self.latency_period:
-                            latency = time.time() - self.timer / float(self.latency_period)
+                            latency = (time.time() - self.timer) / float(self.latency_period)
                             self.timer = time.time()
                             self.cnt = 0
                             print("[Detection] Latency {}".format(latency))

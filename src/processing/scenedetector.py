@@ -17,13 +17,16 @@ def detect_scene(img_address):
     url = SCENE_API_URL
     data = {"imageUrl": img_address}
     json_data = json.dumps(data)
-    response = requests.post(url=url, data=json_data)
-    res = json.loads(response.text)
-    if 'prediction' in res:
-        return res['entries'][img_address]
-    else:
-        print('[Scene] Data loss for {}:{}'.format(img_address, res))
-        return None
+    try_index = 0
+    while try_index < 5:
+        response = requests.post(url=url, data=json_data)
+        res = json.loads(response.text)
+        if 'prediction' in res:
+            return res['entries'][img_address]
+        try_index += 1
+        time.sleep(try_index * 0.1)
+    print('[Scene] Data loss for {}:{}'.format(img_address, res))
+    return None
 
 
 def detect_scene_algorithmia(img_address):
@@ -38,9 +41,12 @@ def detect_scene_algorithmia(img_address):
     input = {"image": img_address}
     client = Algorithmia.client(ALGORITHMIA_KEY)
     algo = client.algo('deeplearning/Places365Classifier/0.1.9')
-    res = algo.pipe(input).result
-    if "predictions" in res:
-        return res
-    else:
-        print('[Scene] Data loss for {}:{}'.format(img_address, res))
-        return None
+    try_index = 0
+    while try_index < 5:
+        res = algo.pipe(input).result
+        if "predictions" in res:
+            return res
+        try_index += 1
+        time.sleep(try_index * 0.1)
+    print('[Scene] Data loss for {}:{}'.format(img_address, res))
+    return None
