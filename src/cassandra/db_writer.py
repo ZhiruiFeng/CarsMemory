@@ -17,24 +17,29 @@ class DBWriter(object):
         self.session = self.db.get_session()
 
     def insert_new_to_frame(self, msginfo):
-        """This greatly related to format parsed by parse_objs funciton in keyframes.py"""
 
-        camid = 'dashcam_' + str(msginfo['camera'])
-        timestamp = msginfo['timestamp']
-        store_date = get_date_from_timestamp(timestamp)
-        s3_key = get_s3_key(camid, timestamp)
-
-        insert_json = {}
-        insert_json['dashcam_id'] = camid
-        insert_json['store_date'] = store_date
-        insert_json['store_time'] = timestamp
-        insert_json['is_keyframe'] = msginfo['is_keyframe']
-        insert_json['storage_link'] = get_url_from_key(s3_key)
-        insert_json['obj_tags'] = msginfo['objs']
-        insert_json['scenes'] = msginfo['scenes']
-
-        insert_command = 'INSERT INTO frames JSON \'' + json.dumps(insert_json) + '\'';
+        insert_command = insert_frame_command(msginfo)
         try:
             self.session.execute(insert_command)
         except:
             print('Executation error.')
+
+
+def insert_frame_command(msginfo):
+    """This greatly related to format parsed by parse_objs funciton in keyframes.py"""
+    camid = 'dashcam_' + str(msginfo['camera'])
+    timestamp = msginfo['timestamp']
+    store_date = get_date_from_timestamp(timestamp)
+    s3_key = get_s3_key(camid, timestamp)
+
+    insert_json = {}
+    insert_json['dashcam_id'] = camid
+    insert_json['store_date'] = store_date
+    insert_json['store_time'] = timestamp
+    insert_json['is_keyframe'] = msginfo['is_keyframe']
+    insert_json['storage_link'] = get_url_from_key(s3_key)
+    insert_json['obj_tags'] = msginfo['objs']
+    insert_json['scenes'] = msginfo['scenes']
+
+    insert_command = 'INSERT INTO frames JSON \'' + json.dumps(insert_json) + '\'';
+    return insert_command

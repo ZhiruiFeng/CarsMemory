@@ -4,6 +4,7 @@
 """Extract keyframes of annotation for human checking"""
 
 from collections import Counter
+from src.params import SCENE_NUM
 
 
 def parse_objs(objs):
@@ -31,7 +32,7 @@ def parse_objs(objs):
     return res, cnt
 
 
-def parse_scene(scenes, max_num):
+def parse_scene(scenes, max_num=SCENE_NUM):
     """After parsing, the format would be easier to analyze,
     and it will fit cassandra schema.
     """
@@ -46,3 +47,21 @@ def parse_scene(scenes, max_num):
         res.append(class_name)
         cnt += 1
     return res
+
+
+def judge_value(msginfo):
+    # TODO This part related to the generated report
+    return True
+
+
+def parse_mapper(msginfo, max_num=SCENE_NUM):
+    objs = msginfo['objs']
+    newobjs, cnt = parse_objs(objs)
+    msginfo['objs'] = objs
+    msginfo['counts'] = cnt
+    scenes = msginfo['scenes']
+    newscenes = parse_scene(scenes, max_num)
+    msginfo['scenes'] = newscenes
+    msginfo['valuable'] = judge_value(msginfo)
+    msginfo['is_keyframe'] = True  # Initial it as true
+    return msginfo
