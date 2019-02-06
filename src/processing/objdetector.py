@@ -32,10 +32,13 @@ def detect_object(img_address):
     url = OBJ_API_URL
     data = {"imageUrls": [img_address]}
     json_data = json.dumps(data)
-    response = requests.post(url=url, data=json_data)
-    res = json.loads(response.text)
-    if 'entries' in res:
-        return res['entries'][img_address]
-    else:
-        print('[Obj] Data loss for {}:{}'.format(img_address, res))
-        return None
+    try_index = 0
+    while try_index < 5:
+        response = requests.post(url=url, data=json_data)
+        res = json.loads(response.text)
+        if 'entries' in res:
+            return res['entries'][img_address]
+        try_index += 1
+        time.sleep(try_index * 0.1)
+    print('[Obj] Data loss for {}:{}'.format(img_address, res))
+    return None

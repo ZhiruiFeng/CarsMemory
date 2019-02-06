@@ -10,10 +10,10 @@ from src.consumers.librarian import Librarian
 
 
 def start_topics():
-    set_topic(frame_topic, frame_partitions)
-    set_topic(url_topic, url_partitions)
-    set_topic(obj_topic, obj_partitions)
-    set_topic(value_topic, value_partitions)
+    set_topic(frame_topic, partitions=frame_partitions)
+    set_topic(url_topic, partitions=url_partitions)
+    set_topic(obj_topic, partitions=obj_partitions)
+    set_topic(value_topic, partitions=value_partitions)
 
 def start_consumers():
     porter_group = [Porter(frame_topic=frame_topic,

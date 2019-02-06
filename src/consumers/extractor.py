@@ -110,7 +110,7 @@ class Extractor(Process):
                         # TODO need to add a buffer for ordering message from different partitions
                         result = msg.value
                         new_obj_format, new_cnt = parse_objs(result['objs'])
-                        scene_lists = parse_scene(result['scenes'])
+                        scene_lists = parse_scene(result['scenes'], 3)
                         result['objs'] = new_obj_format
                         result['scenes'] = scene_lists
                         # A easy version of key_frame extractor
