@@ -70,7 +70,7 @@ def load_data(path):
     }
 
     if DEBUG:
-        print(f'{path} loaded.')
+        print('fail loaded.')
 
     return data_dict
 
@@ -109,7 +109,7 @@ app.layout = html.Div([
                     dcc.Slider(
                         min=20,
                         max=80,
-                        marks={i: f'{i}%' for i in range(20, 81, 10)},
+                        marks={i: '{}'.format(i) for i in range(20, 81, 10)},
                         value=50,
                         updatemode='drag',
                         id='slider-minimum-confidence-threshold'
@@ -360,10 +360,10 @@ def update_score_bar(n, current_time, footage, threshold):
             objects_wc = []  # Object renamed with counts
             for object in objects:
                 object_count_dict[object] += 1  # Increment count
-                objects_wc.append(f"{object} {object_count_dict[object]}")
+                objects_wc.append("{} {}".format(object, object_count_dict[object]))
 
             # Add text information
-            y_text = [f"{round(value*100)}% confidence" for value in frame_df["score"].tolist()]
+            y_text = ["{} confidence".format(round(value*100)) for value in frame_df["score"].tolist()]
 
             # Convert color into rgb
             color_map = lambda class_id: str(ImageColor.getrgb(STANDARD_COLORS[class_id % len(STANDARD_COLORS)]))
@@ -420,7 +420,7 @@ def update_object_count_pie(n, current_time, footage, threshold):
             classes = class_counts.index.tolist()  # List of each class
             counts = class_counts.tolist()  # List of each count
 
-            text = [f"{count} detected" for count in counts]
+            text = ["{} detected".format(count) for count in counts]
 
             pie = go.Pie(
                 labels=classes,
@@ -487,7 +487,7 @@ def update_heatmap_confidence(n, current_time, footage, threshold):
                 colorscale = [[0, '#ffffff'], [1, '#ffffff']]
                 font_colors = ['#3c3636']
 
-            hover_text = [f"{score * 100:.2f}% confidence" for score in score_list]
+            hover_text = ["{} confidence".format(score * 100) for score in score_list]
             hover_text = np.reshape(hover_text, (-1, int(root_round)))
             hover_text = np.flip(hover_text, axis=0)
 
