@@ -1,4 +1,5 @@
 import sys
+sys.path.append('../')
 from src.producer.video_producer import StreamVideo
 from src.kafka.utils import clear_topic, set_topic
 from src.params import FRAME_PARTITIONS, VALUE_PARTITIONS

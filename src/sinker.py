@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../')
 from confluent_kafka import Consumer, KafkaError
 from src.params import KAFKA_BROKER
 from src.cassandra.db_connector import CassandraConnector
