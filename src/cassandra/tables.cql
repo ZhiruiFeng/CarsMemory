@@ -23,7 +23,8 @@ CREATE TABLE frames (
     is_keyframe boolean,
     storage_link text,
     obj_tags map<int, frozen<object>>,
-    sceces list<text>,
+    scenes list<text>,
+    checked boolean,
     PRIMARY KEY ((dashcam_id, store_date), store_time)
 );
 

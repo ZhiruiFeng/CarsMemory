@@ -5,7 +5,10 @@ scipy
 imutils
 scikit-image
 kafka-python
+confluent-kafka
 opencv-contrib-python
-flask
+Flask
 cassandra-driver
 boto3
+botocore
+geopy

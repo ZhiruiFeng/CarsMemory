@@ -54,7 +54,7 @@ class StreamVideo(Process):
         :param rr_distribute: use round robin partitioner, should be set same as consumers.
         """
         super().__init__(group=group, target=target, name=name)
-        # URL for streaming video
+        # This is the folder for videos
         self.video_path = video_path
         # TOPIC TO PUBLISH
         self.frame_topic = topic
@@ -102,8 +102,9 @@ class StreamVideo(Process):
                                                                                 self.frame_topic)))
         # Use either option
         if self.use_cv2:
-            video = cv2.VideoCapture(self.video_path)
-            self.sampler.add_video(video)
+            # video = cv2.VideoCapture(self.video_path)
+            # Here we use sampler to read all videos from a folder
+            self.sampler.add_video(self.video_path)
         else:
             video = VideoStream(self.video_path).start()
 

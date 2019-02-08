@@ -11,6 +11,7 @@ url_topic = "url"
 url_partitions = URL_PARTITIONS
 value_topic = "value"
 value_partitions = VALUE_PARTITIONS
+obj_topic_prefix = "obj"
 
 
 if __name__ == "__main__":
@@ -22,7 +23,7 @@ if __name__ == "__main__":
                            group_id="porter") for _ in range(int(frame_partitions/4))]
     # obj_topic here is a prefix.
     detector_group = [ObjConsumer(url_topic=url_topic,
-                           obj_topic="obj",
+                           obj_topic=obj_topic_prefix,
                            topic_partitions=1,
                            verbose=False,
                            rr_distribute=False,

@@ -60,6 +60,9 @@ class Extractor(Process):
         print("[INFO] I am ", self.iam)
         self.buffer = []
         self.uppersize = 50
+        self.scenemapper = {}
+        self.keyframe_cnt = 0
+        self.load_scene_mapper()
 
     def run(self):
         """Consume raw frames, detects faces, finds their encoding [PRE PROCESS],
@@ -96,24 +99,20 @@ class Extractor(Process):
                                        value_serializer=lambda value: json.dumps(value).encode(),
                                        partitioner=partitioner)
         history_cnt = None
+
         try:
             while True:
 
                 meta_messages = meta_consumer.poll(timeout_ms=10, max_records=10)
 
                 for topic_partition, msgs in meta_messages.items():
-
-                    # Update some statistic informations every 10 minutes
-                    if time.time() - self.timer > 600:
-                        self.update_acc_table()
-                        self.counter = Counter()
-                        self.timer = time.time()
-
                     # Get the predicted Object, JSON with frame and meta info about the frame
                     for msg in msgs:
                         # get pre processing result
-
                         result = parse_mapper(msg.value)
+                        self.transfer_scene_type(result)
+
+                        # Using the buffer to keep time order
                         heappush(self.buffer, (result['frame_num'], result))
 
                         if len(self.buffer) < self.uppersize:
@@ -129,7 +128,18 @@ class Extractor(Process):
                             result['is_keyframe'] = (new_cnt != history_cnt)
                             history_cnt = new_cnt
 
+                        # Scene statistic
+                        scenecnt = Counter(result['scenes'])
+                        self.counter += scenecnt
+                        if result['is_keyframe']:
+                            self.keyframe_cnt += 1
+
+                        # Need to be refined later
                         result['valuable'] = self.is_valuable(result)
+
+                        # Update some statistic informations every minute
+                        if time.time() - self.timer > 60:
+                            self.update_acc_table(result)
 
                         if self.verbose:
                             print("[Extractor done]")
@@ -152,8 +162,31 @@ class Extractor(Process):
             print("Closing Stream")
             meta_consumer.close()
 
-    def update_acc_table(self):
-        pass
+    def update_acc_table(self, msginfo):
+        # Just insert command for dbsinker to do the job.
+        msginfo['update_statistic'] = True
+        msginfo['update_scene_cnt'] = dict(self.counter)
+        msginfo['update_keyframe_cnt'] = dict(self.keyframe_cnt)
+        self.counter = Counter()
+        self.keyframe_cnt = 0
+        self.timer = time.time()
 
     def is_valuable(self, msginfo):
         return True
+
+    def load_scene_mapper(self):
+        with open('../scenelist.txt', 'r') as f:
+            content = f.readlines()
+            for line in content:
+                items = line.strip().split(' ')
+                type = items[0]
+                for scene in items[1:]:
+                    self.scenemapper[scene] = type
+
+    def transfer_scene_type(self, msginfo):
+        scenes = msginfo['scenes']
+        displayset = set()
+        for scene in scenes:
+            if scene in self.scenemapper:
+                displayset.add(self.scenemapper[scene])
+        msginfo['scenes'] = list[displayset]
