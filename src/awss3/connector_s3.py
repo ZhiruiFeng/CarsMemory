@@ -21,10 +21,10 @@ class S3Connector(object):
             print("Please set up AWS authentication credentials")
 
     def get_objs_with_prefix(self, prefix):
-        return list(self.bucket.object.filter(Prefix=prefix))
+        return list(self.bucket.objects.filter(Prefix=prefix))
 
     def get_objs_keys_with_prefix(self, prefix):
-        objs = self.get_objs_with_prefix(self, prefix)
+        objs = self.get_objs_with_prefix(prefix)
         keys = [obj.key for obj in objs if len(obj.key) > len(prefix)]
         return keys
 

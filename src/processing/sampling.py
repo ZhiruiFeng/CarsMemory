@@ -2,7 +2,7 @@
 # sampling.py
 
 """To compress the incoming video streaming by sampling."""
-from src.awss3.reader_s3 import S3Reader
+from src.awss3.reader_s3 import S3VideoReader
 from src.params import MY_BUCKET
 import boto3
 import botocore
@@ -14,9 +14,9 @@ class VideoSampler(object):
     def __init__(self, batch):
         self.batch = batch
         self.record_filename = 'dashcash_record.txt'
-        self.s3reader = S3Reader(MY_BUCKET)
+        self.s3reader = S3VideoReader(MY_BUCKET)
         self.resource = boto3.resource('s3')
-        self.bucket = self.resource.Bucket(self.bucket_name)
+        self.bucket = self.resource.Bucket(MY_BUCKET)
         self.visited = []
         self.cur_video = None
         self.re_file = None

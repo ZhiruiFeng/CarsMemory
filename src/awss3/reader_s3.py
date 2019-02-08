@@ -3,7 +3,7 @@
 
 """Read data from AWS S3"""
 
-from connector_s3 import S3Connector
+from src.awss3.connector_s3 import S3Connector
 
 
 class S3Reader(object):
@@ -16,7 +16,8 @@ class S3Reader(object):
 class S3VideoReader(S3Reader):
 
     def __init__(self, bucket_name):
-        super.__init__(bucket_name)
+        self.bucket_name = bucket_name
+        self.connector = S3Connector(self.bucket_name)
         self.http_prefix = 'http://s3-us-west-2.amazonaws.com/' + self.bucket_name + '/'
 
     def get_urls_in_folder(self, prefix):

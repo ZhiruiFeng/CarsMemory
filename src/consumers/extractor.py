@@ -175,7 +175,7 @@ class Extractor(Process):
         return True
 
     def load_scene_mapper(self):
-        with open('../scenelist.txt', 'r') as f:
+        with open('/home/ubuntu/workspace/CarsMemory/src/scenelist.txt', 'r') as f:
             content = f.readlines()
             for line in content:
                 items = line.strip().split(' ')
