@@ -127,7 +127,7 @@ class ObjConsumer(Process):
                         url_consumer.commit(offsets=offsets)
 
                         # Partition to be sent to
-                        send_topic = self.obj_topic + '_' + result['camera']
+                        send_topic = self.obj_topic + '_' + str(result['camera'])
                         obj_producer.send(send_topic, value=result)
 
                     obj_producer.flush()

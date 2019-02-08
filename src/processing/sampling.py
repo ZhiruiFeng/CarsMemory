@@ -23,6 +23,7 @@ class VideoSampler(object):
         self.allvideo = None
         self.record_key = None
         self.local_file = None
+        self.cap = None
 
     def add_video(self, video_folder_path):
         self.recode_file_key = video_folder_path + self.record_filename
@@ -74,6 +75,11 @@ class VideoSampler(object):
             if url[-3:] == 'txt' or url in self.visited:
                 continue
             self.cur_video = url
+            self.cap.release()
             self.cap = cv2.VideoCapture(self.cur_video)
             return True
         return False
+
+    def release(self):
+        if self.cap:
+            self.cap.release()

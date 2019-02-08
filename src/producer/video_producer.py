@@ -164,7 +164,7 @@ class StreamVideo(Process):
             frame_num += 1
 
         if self.use_cv2:
-            video.release()
+            self.sampler.release()
         else:
             video.stop()
 
