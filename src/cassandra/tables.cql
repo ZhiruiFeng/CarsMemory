@@ -43,3 +43,36 @@ UPDATE frame SET obj_tags = obj_tags + {2:{class:'person', x1:10, y1:10, x2:90, 
 WHERE dashcam_id='test_cam'
 AND date='2019-01-25'
 AND store_time = '2019-01-25 02:21:00';
+
+# TABLE statistic CREATION
+CREATE TABLE statistic (
+    dashcam_id text,
+    store_date text,
+    location text,
+    total counter,
+    station counter,
+    parking counter,
+    gas counter,
+    airfield counter,
+    ruin counter,
+    downtown counter,
+    harbor counter,
+    park counter,
+    wild counter,
+    alley counter,
+    crosswalk counter,
+    bridge counter,
+    highway counter,
+    snowfield counter,
+    neighborhood counter,
+    keyframes counter,
+    PRIMARY KEY ((dashcam_id, store_date), location)
+);
+
+# ADD obj_tags
+UPDATE statistic SET
+gas = gas + 1,
+total = total + 0
+WHERE dashcam_id='test_cam'
+AND store_date='20190201'
+AND location = 'SF';

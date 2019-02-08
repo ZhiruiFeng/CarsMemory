@@ -13,16 +13,18 @@ from kafka.coordinator.assignors.range import RangePartitionAssignor
 from kafka.coordinator.assignors.roundrobin import RoundRobinPartitionAssignor
 from kafka.partitioner import RoundRobinPartitioner, Murmur2Partitioner
 from kafka.structs import OffsetAndMetadata, TopicPartition
-from src.processing.keyframes import parse_objs, parse_scene
+from src.processing.keyframes import parse_objs, parse_scene, parse_mapper
 from collections import Counter
 import time
+from heapq import heappush, heappop
+
 
 class Extractor(Process):
 
     def __init__(self,
                  meta_topic,
                  value_topic,
-                 topic_partitions=8,
+                 topic_partitions=1,
                  verbose=False,
                  rr_distribute=False,
                  group_id="extractor",
@@ -56,6 +58,8 @@ class Extractor(Process):
         self.counter = Counter()
         self.timer = time.time()
         print("[INFO] I am ", self.iam)
+        self.buffer = []
+        self.uppersize = 50
 
     def run(self):
         """Consume raw frames, detects faces, finds their encoding [PRE PROCESS],
@@ -99,6 +103,7 @@ class Extractor(Process):
 
                 for topic_partition, msgs in meta_messages.items():
 
+                    # Update some statistic informations every 10 minutes
                     if time.time() - self.timer > 600:
                         self.update_acc_table()
                         self.counter = Counter()
@@ -107,23 +112,25 @@ class Extractor(Process):
                     # Get the predicted Object, JSON with frame and meta info about the frame
                     for msg in msgs:
                         # get pre processing result
-                        # TODO need to add a buffer for ordering message from different partitions
-                        result = msg.value
-                        new_obj_format, new_cnt = parse_objs(result['objs'])
-                        scene_lists = parse_scene(result['scenes'], 3)
-                        result['objs'] = new_obj_format
-                        result['scenes'] = scene_lists
-                        # A easy version of key_frame extractor
-                        is_keyframe = False
-                        if not history_cnt:
-                            is_keyframe = True
-                        elif not history_cnt == new_cnt:
-                            is_keyframe = True
 
-                        self.counter += new_cnt
+                        result = parse_mapper(msg.value)
+                        heappush(self.buffer, (result['frame_num'], result))
 
-                        result['is_keyframe'] = is_keyframe
-                        result['valuable'] = True
+                        if len(self.buffer) < self.uppersize:
+                            continue
+
+                        result = heappop(self.buffer)[1]
+
+                        # Extract keyframe
+                        if history_cnt is None:
+                            result['is_keyframe'] = True
+                        else:
+                            new_cnt = Counter(result['counts'])
+                            result['is_keyframe'] = (new_cnt != history_cnt)
+                            history_cnt = new_cnt
+
+                        result['valuable'] = self.is_valuable(result)
+
                         if self.verbose:
                             print("[Extractor done]")
                             print(result)
@@ -147,3 +154,6 @@ class Extractor(Process):
 
     def update_acc_table(self):
         pass
+
+    def is_valuable(self, msginfo):
+        return True

@@ -127,4 +127,4 @@ def get_url_from_key(s3_key):
 
 def get_s3_key(cam_id, timestamp):
     str_today = get_date_from_timestamp(timestamp)
-    return STORE_KEY_PREFIX + str_today + '/' + str(cam_id) + '/'
+    return STORE_KEY_PREFIX + str_today + '/' + str(cam_id) + '/' + str(timestamp) + '.jpg'

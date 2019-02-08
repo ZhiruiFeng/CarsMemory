@@ -1,0 +1,16 @@
+station bus_station/indoor train_station/platform railroad_track
+parking parking_lot parking_garage/outdoor parking_garage/indoor garage/indoor garage/outdoor
+gas gas_station
+airfield airfield heliport landing_deck runway
+ruin ruin trench
+downtown downtown plaza
+harbor harbor pier coast beach
+park park picnic_area playground golf_course
+alley alley boardwalk
+crosswalk crosswalk
+bridge bridge viaduct
+village village windmill farm hayfield corn_field orchard
+highway highway raceway
+snowfield snowfield
+neighborhood residential_neighborhood courtyard driveway loading_dock
+wild field/wild marsh valley desert_road field_road forest forest_path forest_road mountain mountain_path

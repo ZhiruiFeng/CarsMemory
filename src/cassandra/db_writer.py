@@ -24,6 +24,13 @@ class DBWriter(object):
         except:
             print('Executation error.')
 
+    def update_statistic(self, msginfo, cnt, keyframes):
+        command = update_statistic_command(msginfo, cnt, keyframes)
+        try:
+            self.session.execute(command)
+        except:
+            print('Update error.')
+
 
 def insert_frame_command(msginfo):
     """This greatly related to format parsed by parse_objs funciton in keyframes.py"""
@@ -43,3 +50,22 @@ def insert_frame_command(msginfo):
 
     insert_command = 'INSERT INTO frames JSON \'' + json.dumps(insert_json) + '\'';
     return insert_command
+
+
+def update_statistic_command(msginfo, cnt, keyframes):
+    """This is the information needed to update the statistics"""
+    dashcam_id = 'dashcam_' + str(msginfo['camera'])
+    store_date = get_date_from_timestamp(msginfo['timestamp'])
+    location = msginfo['location']
+    total = 0
+    command = "UPDATE statistic SET "
+    for key in cnt:
+        subcommand = str(key) + ' = ' + str(key) + ' + ' + str(cnt[key]) + ','
+        total += cnt[key]
+        command += subcommand
+    command += " total = total + " + str(total) + ','
+    command += " keyframes = keyframes + " + str(keyframes)
+    command += " WHERE dashcam_id = \'" + dashcam_id + "\'"
+    command += " AND store_date= \'" + str(store_date) + "\'"
+    command += " AND location= \'" + location + '\';'
+    return command

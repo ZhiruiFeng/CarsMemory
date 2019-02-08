@@ -30,6 +30,7 @@ from src.processing.sampling import VideoSampler
 class StreamVideo(Process):
     def __init__(self, video_path,
                  topic,
+                 location,
                  topic_partitions=8,
                  use_cv2=False,
                  pub_obj_key=settings.ORIGINAL_PREFIX,
@@ -65,6 +66,10 @@ class StreamVideo(Process):
         self.verbose = verbose
         self.rr_distribute = rr_distribute
         self.sampler = VideoSampler(sample_speed)
+
+        # For first version, we just use the car's registion location
+        # In future, we could use GPS information
+        self.location = location
 
     def run(self):
         """Publish video frames as json objects, timestamped, marked with camera number.
@@ -127,6 +132,7 @@ class StreamVideo(Process):
             # Attach metadata to frame, transform into JSON
             message = self.transform(frame=image,
                                      frame_num=frame_num,
+                                     location=self.location,
                                      object_key=self.object_key,
                                      camera=self.camera_num,
                                      verbose=self.verbose)
@@ -167,10 +173,11 @@ class StreamVideo(Process):
         return True if frame_num > 0 else False
 
     @staticmethod
-    def transform(frame, frame_num, object_key, camera=0, verbose=False):
+    def transform(frame, frame_num, location, object_key, camera=0, verbose=False):
         """Serialize frame, create json message with serialized frame, camera number and timestamp.
         :param frame: numpy.ndarray, raw frame
         :param frame_num: frame number in the particular video/camera
+        :param location: the location of the cars
         :param object_key: identifier for these objects
         :param camera: Camera Number the frame is from
         :param verbose: print out logs
@@ -187,7 +194,10 @@ class StreamVideo(Process):
         # serialize frame
         frame_dict = np_to_json(frame.astype(np.uint8), prefix_name=object_key)
         # Metadata for frame
-        message = {"timestamp": get_curtimestamp_millis(), "camera": camera, "frame_num": frame_num}
+        message = {"timestamp": get_curtimestamp_millis(),
+                   "location": location,
+                   "camera": camera,
+                   "frame_num": frame_num}
         # add frame and metadata related to frame
         message.update(frame_dict)
 

@@ -33,7 +33,7 @@ class ObjConsumer(Process):
         OBJECT DETECTION IN FRAMES --> Consuming encoded frame messages, detect faces and their encodings [PRE PROCESS],
         publish it to processed_frame_topic where these values are used for face matching with query faces.
         :param url_topic:
-        :param obj_topic:
+        :param obj_topic: It's just a prefix which need to accompany with the camera id.
         :param topic_partitions: number of partitions processed_frame_topic topic has, for distributing messages among partitions
         :param verbose: print logs on stdout
         :param rr_distribute:  use round robin partitioner and assignor, should be set same as respective producers or consumers.
@@ -127,9 +127,8 @@ class ObjConsumer(Process):
                         url_consumer.commit(offsets=offsets)
 
                         # Partition to be sent to
-                        obj_producer.send(self.obj_topic,
-                                          key="{}_{}".format(result["camera"], result["frame_num"]),
-                                          value=result)
+                        send_topic = self.obj_topic + '_' + result['camera']
+                        obj_producer.send(send_topic, value=result)
 
                     obj_producer.flush()
 
