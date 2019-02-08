@@ -1,4 +1,6 @@
 """Need to start seperately on each processing node"""
+import sys
+sys.path.append('../')
 from src.consumers.porter import Porter
 from src.consumers.obj_consumer import ObjConsumer
 from src.consumers.librarian import Librarian

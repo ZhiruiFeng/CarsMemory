@@ -12,3 +12,4 @@ cassandra-driver
 boto3
 botocore
 geopy
+Algorithmia
