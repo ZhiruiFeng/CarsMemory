@@ -11,6 +11,7 @@ def parse_objs(objs):
     """Parse the json returned by object detection model,
     After parsing, the format will fit cassandra schema.
     """
+    print("Parse Objs {}".format(objs))
     if not objs:
         return None, Counter()
     cnt = Counter()
@@ -57,7 +58,7 @@ def judge_value(msginfo):
 def parse_mapper(msginfo, max_num=SCENE_NUM):
     objs = msginfo['objs']
     newobjs, cnt = parse_objs(objs)
-    msginfo['objs'] = objs
+    msginfo['objs'] = newobjs
     msginfo['counts'] = cnt
     scenes = msginfo['scenes']
     newscenes = parse_scene(scenes, max_num)

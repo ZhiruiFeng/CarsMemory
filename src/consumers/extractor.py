@@ -59,7 +59,7 @@ class Extractor(Process):
         self.timer = time.time()
         print("[INFO] I am ", self.iam)
         self.buffer = []
-        self.uppersize = 50
+        self.uppersize = 20
         self.scenemapper = {}
         self.keyframe_cnt = 0
         self.load_scene_mapper()
@@ -109,17 +109,18 @@ class Extractor(Process):
                     # Get the predicted Object, JSON with frame and meta info about the frame
                     for msg in msgs:
                         # get pre processing result
+                        print("TEST0 {}".format(msg.value))
                         result = parse_mapper(msg.value)
                         self.transfer_scene_type(result)
 
                         # Using the buffer to keep time order
-                        heappush(self.buffer, (result['frame_num'], result))
+                        heappush(self.buffer, (result['frame_num'], json.dumps(result)))
 
                         if len(self.buffer) < self.uppersize:
                             continue
 
-                        result = heappop(self.buffer)[1]
-
+                        result = json.loads(heappop(self.buffer)[1])
+                        print("TEST1 {}".format(result))
                         # Extract keyframe
                         if history_cnt is None:
                             result['is_keyframe'] = True
@@ -127,7 +128,7 @@ class Extractor(Process):
                             new_cnt = Counter(result['counts'])
                             result['is_keyframe'] = (new_cnt != history_cnt)
                             history_cnt = new_cnt
-
+                        print("TEST2 {}".format(result))
                         # Scene statistic
                         scenecnt = Counter(result['scenes'])
                         self.counter += scenecnt
@@ -138,8 +139,9 @@ class Extractor(Process):
                         result['valuable'] = self.is_valuable(result)
 
                         # Update some statistic informations every minute
-                        if time.time() - self.timer > 60:
+                        if time.time() - self.timer > 10:
                             self.update_acc_table(result)
+                            print('TEST3 {}'.format(result))
 
                         if self.verbose:
                             print("[Extractor done]")
@@ -166,7 +168,7 @@ class Extractor(Process):
         # Just insert command for dbsinker to do the job.
         msginfo['update_statistic'] = True
         msginfo['update_scene_cnt'] = dict(self.counter)
-        msginfo['update_keyframe_cnt'] = dict(self.keyframe_cnt)
+        msginfo['update_keyframe_cnt'] = int(self.keyframe_cnt)
         self.counter = Counter()
         self.keyframe_cnt = 0
         self.timer = time.time()
@@ -189,4 +191,6 @@ class Extractor(Process):
         for scene in scenes:
             if scene in self.scenemapper:
                 displayset.add(self.scenemapper[scene])
-        msginfo['scenes'] = list[displayset]
+        if len(displayset) == 0:
+            displayset.add("street")
+        msginfo['scenes'] = list(displayset)

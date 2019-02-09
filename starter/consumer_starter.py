@@ -27,7 +27,7 @@ if __name__ == "__main__":
     detector_group = [ObjConsumer(url_topic=url_topic,
                            obj_topic=obj_topic_prefix,
                            topic_partitions=1,
-                           verbose=False,
+                           verbose=True,
                            rr_distribute=False,
                            group_id="detector") for _ in range(int(url_partitions/4))]
 

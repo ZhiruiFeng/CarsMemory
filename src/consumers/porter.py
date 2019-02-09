@@ -137,6 +137,7 @@ class Porter(Process):
         urldict = {'s3_key': s3_key,
                    'camera': cam_id,
                    'timestamp': timestamp,
-                   'frame_num': frame_obj['frame_num']}
+                   'frame_num': frame_obj['frame_num'],
+                   'location': frame_obj['location']}
 
         return urldict
