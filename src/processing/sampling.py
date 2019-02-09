@@ -7,9 +7,11 @@ from src.params import MY_BUCKET
 import boto3
 import botocore
 import cv2
+import os
 
 
 class VideoSampler(object):
+    """The sampler could read videos from the folder"""
 
     def __init__(self, batch):
         self.batch = batch
@@ -17,7 +19,7 @@ class VideoSampler(object):
         self.s3reader = S3VideoReader(MY_BUCKET)
         self.resource = boto3.resource('s3')
         self.bucket = self.resource.Bucket(MY_BUCKET)
-        self.visited = []
+        self.visited = set()
         self.cur_video = None
         self.re_file = None
         self.allvideo = None
@@ -33,10 +35,13 @@ class VideoSampler(object):
             with open(self.local_file, 'r') as re_file:
                 content = re_file.readlines()
                 for line in content:
-                    self.visited.append(line)
+                    self.visited.add(line.strip())
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
                 print("An unvisited folder")
+                # If local has some historical recods, need delete
+                if os.path.isfile(self.local_file):
+                    os.remove(self.local_file)
             else:
                 raise
         self.re_file = open(self.local_file, 'a')
@@ -57,11 +62,12 @@ class VideoSampler(object):
         if not success:
             if not self.next_video():
                 return False, None
-        success, image = self.cap.read()
+            success, image = self.cap.read()
         return success, image
 
     def next_video(self):
         if self.cur_video:
+            self.visited.add(self.cur_video)
             self.re_file.write(self.cur_video + '\n')
             self.re_file.close()
             try:
@@ -75,8 +81,10 @@ class VideoSampler(object):
             if url[-3:] == 'txt' or url in self.visited:
                 continue
             self.cur_video = url
-            self.cap.release()
+            if self.cap:
+                self.cap.release()
             self.cap = cv2.VideoCapture(self.cur_video)
+            print("Ingest a new video {}".format(self.cur_video))
             return True
         return False
 
