@@ -7,6 +7,7 @@ import requests
 import json
 from src.params import SCENE_API_URL, ALGORITHMIA_KEY
 import Algorithmia
+import time
 
 
 def detect_scene(img_address):
