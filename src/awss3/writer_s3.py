@@ -16,7 +16,7 @@ class S3TmpWriter(object):
 
     def __init__(self, bucket_name):
         self.connector = S3Connector(bucket_name)
-        self.key_prefix = TMP_KEY_PREFIX
+        self.key_prefix = STORE_KEY_PREFIX
 
     def _get_tmp_key(self, cam_id, timestamp):
         str_today = get_date_from_timestamp(timestamp)

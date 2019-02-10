@@ -13,7 +13,17 @@ def get_fps(video):
 
 
 def rotate(img):
-    return np.rot90(img)
+    height, width, _ = img.shape
+    if height > width:
+        img = np.rot90(img)
+    img_gray = cv2.cvtColor(cv2.cvtColor(img.astype(np.uint8), cv2.COLOR_BGR2RGB), cv2.COLOR_BGR2GRAY)
+    up = img_gray[:10]
+    down = img_gray[-10:]
+    if up.sum() > down.sum():
+        return img
+    else:
+        img = np.rot90(img)
+        return np.rot90(img)
 
 
 def resize(img, width):

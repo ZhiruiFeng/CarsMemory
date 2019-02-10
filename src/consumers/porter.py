@@ -127,7 +127,7 @@ class Porter(Process):
         # frame_obj = json
         frame = np_from_json(frame_obj, prefix_name=settings.ORIGINAL_PREFIX)
         # Convert the image from BGR color (which OpenCV uses) to RGB color
-        frame = cv2.cvtColor(frame.astype(np.uint8), cv2.COLOR_BGR2RGB)
+        # frame = cv2.cvtColor(frame.astype(np.uint8), cv2.COLOR_BGR2RGB)
 
         cam_id = frame_obj['camera']
         timestamp = frame_obj['timestamp']
