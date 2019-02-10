@@ -19,7 +19,7 @@ class DBWriter(object):
     def insert_new_to_frame(self, msginfo):
 
         insert_command = insert_frame_command(msginfo)
-        print(insert_command)
+        # print(insert_command)
         try:
             self.session.execute(insert_command)
         except:
@@ -27,7 +27,7 @@ class DBWriter(object):
 
     def update_statistic(self, msginfo, cnt, keyframes):
         command = update_statistic_command(msginfo, cnt, keyframes)
-        print(command)
+        # print(command)
         try:
             self.session.execute(command)
         except:

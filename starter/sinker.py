@@ -28,10 +28,10 @@ try:
         if msg is None:
             continue
         elif not msg.error():
-            print('Received message: {0}'.format(msg.value()))
+            # print('Received message: {0}'.format(msg.value()))
             msginfo = msg.value().decode("utf-8")
             msginfo = json.loads(msginfo)
-            print(msginfo)
+            # print(msginfo)
             dbwriter.insert_new_to_frame(msginfo)
             if 'update_statistic' in msginfo:
                 scene_cnt = msginfo['update_scene_cnt']

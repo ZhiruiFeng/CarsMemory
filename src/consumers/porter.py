@@ -85,7 +85,7 @@ class Porter(Process):
                                                  key_serializer=lambda key: str(key).encode(),
                                                  value_serializer=lambda value: json.dumps(value).encode(),
                                                  partitioner=partitioner)
-        print("started", self.iam)
+
         try:
             while True:
                 # if self.verbose:

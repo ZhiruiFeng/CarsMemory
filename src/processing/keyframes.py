@@ -11,7 +11,7 @@ def parse_objs(objs):
     """Parse the json returned by object detection model,
     After parsing, the format will fit cassandra schema.
     """
-    print("Parse Objs {}".format(objs))
+    # print("Parse Objs {}".format(objs))
     if not objs:
         return None, Counter()
     cnt = Counter()

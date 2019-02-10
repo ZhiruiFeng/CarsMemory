@@ -59,7 +59,7 @@ class Extractor(Process):
         self.timer = time.time()
         print("[INFO] I am ", self.iam)
         self.buffer = []
-        self.uppersize = 20
+        self.uppersize = 128
         self.scenemapper = {}
         self.keyframe_cnt = 0
         self.load_scene_mapper()
@@ -109,7 +109,8 @@ class Extractor(Process):
                     # Get the predicted Object, JSON with frame and meta info about the frame
                     for msg in msgs:
                         # get pre processing result
-                        print("TEST0 {}".format(msg.value))
+                        if self.verbose:
+                            print("TEST0 {}".format(msg.value))
                         result = parse_mapper(msg.value)
                         self.transfer_scene_type(result)
 
@@ -123,15 +124,17 @@ class Extractor(Process):
                             continue
 
                         result = json.loads(heappop(self.buffer)[1])
-                        print("TEST1 {}".format(result))
+                        if self.verbose:
+                            print("TEST1 {}".format(result))
                         # Extract keyframe
                         if history_cnt is None:
                             result['is_keyframe'] = True
                         else:
                             new_cnt = Counter(result['counts'])
                             result['is_keyframe'] = (new_cnt != history_cnt)
-                            history_cnt = new_cnt
-                        print("TEST2 {}".format(result))
+                        history_cnt = new_cnt
+                        if self.verbose:
+                            print("TEST2 {}".format(result))
                         # Scene statistic
                         scenecnt = Counter(result['scenes'])
                         self.counter += scenecnt
@@ -144,7 +147,8 @@ class Extractor(Process):
                         # Update some statistic informations every minute
                         if time.time() - self.timer > 10:
                             self.update_acc_table(result)
-                            print('TEST3 {}'.format(result))
+                            if self.verbose:
+                                print('TEST3 {}'.format(result))
 
                         if self.verbose:
                             print("[Extractor done]")
@@ -166,7 +170,8 @@ class Extractor(Process):
         finally:
             while self.buffer:
                 result = json.loads(heappop(self.buffer)[1])
-                print("TEST1 {}".format(result))
+                if self.verbose:
+                    print("TEST1 {}".format(result))
                 # Extract keyframe
                 if history_cnt is None:
                     result['is_keyframe'] = True
@@ -174,7 +179,8 @@ class Extractor(Process):
                     new_cnt = Counter(result['counts'])
                     result['is_keyframe'] = (new_cnt != history_cnt)
                     history_cnt = new_cnt
-                print("TEST2 {}".format(result))
+                if self.verbose:
+                    print("TEST2 {}".format(result))
                 # Scene statistic
                 scenecnt = Counter(result['scenes'])
                 self.counter += scenecnt
@@ -187,7 +193,8 @@ class Extractor(Process):
                 # Update some statistic informations every minute
                 if len(self.buffer) == 0:
                     self.update_acc_table(result)
-                    print('TEST3 {}'.format(result))
+                    if self.verbose:
+                        print('TEST3 {}'.format(result))
 
                 if self.verbose:
                     print("[Extractor done]")
