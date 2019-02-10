@@ -94,10 +94,7 @@ class ObjConsumer(Process):
                                      partitioner=partitioner)
         try:
             while True:
-
-                if self.verbose:
-                    print("[ConsumeFrames {}] WAITING FOR NEXT FRAMES..".format(socket.gethostname()))
-
+                
                 raw_frame_messages = url_consumer.poll(timeout_ms=10, max_records=10)
 
                 for topic_partition, msgs in raw_frame_messages.items():

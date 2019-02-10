@@ -47,6 +47,7 @@ def insert_frame_command(msginfo):
     insert_json['storage_link'] = get_url_from_key(s3_key)
     insert_json['obj_tags'] = msginfo['objs']
     insert_json['scenes'] = msginfo['scenes']
+    insert_json['location'] = msginfo['location']
 
     insert_command = 'INSERT INTO frames JSON \'' + json.dumps(insert_json) + '\'';
     return insert_command

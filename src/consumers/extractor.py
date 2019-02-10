@@ -117,6 +117,9 @@ class Extractor(Process):
                         heappush(self.buffer, (result['frame_num'], json.dumps(result)))
 
                         if len(self.buffer) < self.uppersize:
+                            tp = TopicPartition(msg.topic, msg.partition)
+                            offsets = {tp: OffsetAndMetadata(msg.offset, None)}
+                            meta_consumer.commit(offsets=offsets)
                             continue
 
                         result = json.loads(heappop(self.buffer)[1])
@@ -161,6 +164,38 @@ class Extractor(Process):
             pass
 
         finally:
+            while self.buffer:
+                result = json.loads(heappop(self.buffer)[1])
+                print("TEST1 {}".format(result))
+                # Extract keyframe
+                if history_cnt is None:
+                    result['is_keyframe'] = True
+                else:
+                    new_cnt = Counter(result['counts'])
+                    result['is_keyframe'] = (new_cnt != history_cnt)
+                    history_cnt = new_cnt
+                print("TEST2 {}".format(result))
+                # Scene statistic
+                scenecnt = Counter(result['scenes'])
+                self.counter += scenecnt
+                if result['is_keyframe']:
+                    self.keyframe_cnt += 1
+
+                # Need to be refined later
+                result['valuable'] = self.is_valuable(result)
+
+                # Update some statistic informations every minute
+                if len(self.buffer) == 0:
+                    self.update_acc_table(result)
+                    print('TEST3 {}'.format(result))
+
+                if self.verbose:
+                    print("[Extractor done]")
+                    print(result)
+
+                # Partition to be sent to
+                value_producer.send(self.value_topic, value=result)
+            value_producer.flush()
             print("Closing Stream")
             meta_consumer.close()
 

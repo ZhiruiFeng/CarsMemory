@@ -25,6 +25,7 @@ CREATE TABLE frames (
     obj_tags map<int, frozen<object>>,
     scenes list<text>,
     checked boolean,
+    location text,
     PRIMARY KEY ((dashcam_id, store_date), store_time)
 );
 
@@ -67,6 +68,7 @@ CREATE TABLE statistic (
     snowfield counter,
     neighborhood counter,
     keyframes counter,
+    street counter,
     PRIMARY KEY ((dashcam_id, store_date), location)
 );
 
