@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     # Set obj_topic and start extractor
     obj_topic = 'obj_' + cam_id
-    group_id = 'extractir' + cam_id
+    group_id = 'extractor_' + cam_id
     if not topic_is_alive(obj_topic):
         set_topic(obj_topic, partitions=1)
     value_topic = "value"

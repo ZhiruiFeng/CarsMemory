@@ -172,12 +172,12 @@ class Extractor(Process):
                 if self.verbose:
                     print("TEST1 {}".format(result))
                 # Extract keyframe
+                new_cnt = Counter(result['counts'])
                 if history_cnt is None:
                     result['is_keyframe'] = True
                 else:
-                    new_cnt = Counter(result['counts'])
                     result['is_keyframe'] = (new_cnt != history_cnt)
-                    history_cnt = new_cnt
+                history_cnt = new_cnt
                 if self.verbose:
                     print("TEST2 {}".format(result))
                 # Scene statistic
