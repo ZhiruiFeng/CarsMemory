@@ -45,10 +45,10 @@ if __name__ == "__main__":
     extractor = Extractor(obj_topic,
                           value_topic,
                           topic_partitions=VALUE_PARTITIONS,
-                          verbose=False,
+                          verbose=True,
                           rr_distribute=False,
                           group_id=group_id)
-    producer = start_producer(s3_folder_key, cam_id)
+    producer = start_producer(s3_folder_key, cam_id, location)
     extractor.start()
     producer.start()
     producer.join()
