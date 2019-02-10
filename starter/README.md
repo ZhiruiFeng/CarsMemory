@@ -13,6 +13,9 @@ Only start Porter, Detector and Librarian in multiprocessing form. Since these c
 
  Sinker currently need to start manually, later we will consider using Spark Streaming.
 
+
+---
+
 **Extractor Starter**
 
 Being created only when new camera connect to the system as input.
@@ -26,3 +29,9 @@ It will related to camera, and here for testing we sent videos from the whole fo
 **Camera Starter**
 
 Since both of Producer and Extractor are related to camera, if all modules run properly, we could combine them together.
+
+---
+
+In normal use case, just use camera starter to run extractor and producer together.
+
+For debugging, run extractor and producer separately could help a lot.
