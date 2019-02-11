@@ -69,6 +69,9 @@ class StreamVideo(Process):
 
         # For first version, we just use the car's registion location
         # In future, we could use GPS information
+        self.timer = time.time()
+        self.zerotime = time.time()
+        self.sizecnt = 0
         self.location = location
 
     def run(self):
@@ -137,6 +140,13 @@ class StreamVideo(Process):
                                      object_key=self.object_key,
                                      camera=self.camera_num,
                                      verbose=self.verbose)
+            self.sizecnt += sys.getsizeof(message)
+            if time.time() - self.timer > 1:
+                acc = self.sizecnt
+                print("Time {} send out size {}".format(int(self.timer - self.zerotime), acc))
+                self.sizecnt = 0
+                self.timer = time.time()
+
 
             # Callback function
             def on_send_success(record_metadata):

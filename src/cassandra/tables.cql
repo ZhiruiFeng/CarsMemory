@@ -69,6 +69,7 @@ CREATE TABLE statistic (
     neighborhood counter,
     keyframes counter,
     street counter,
+    village counter,
     PRIMARY KEY ((dashcam_id, store_date), location)
 );
 
@@ -79,3 +80,11 @@ total = total + 0
 WHERE dashcam_id='test_cam'
 AND store_date='20190201'
 AND location = 'SF';
+
+# TABLE throughput CREATION
+CREATE TABLE throughput (
+    dashcam_id text,
+    record_time timestamp,
+    size float,
+    PRIMARY KEY (dashcam_id, record_time)
+)
