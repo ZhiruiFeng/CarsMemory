@@ -30,7 +30,7 @@ from src.processing.sampling import VideoSampler
 class StreamVideo(Process):
     def __init__(self, video_path,
                  topic,
-                 location,
+                 location='CA',
                  topic_partitions=8,
                  use_cv2=False,
                  pub_obj_key=settings.ORIGINAL_PREFIX,
@@ -118,7 +118,7 @@ class StreamVideo(Process):
 
         while True:
             if self.use_cv2:
-                success, image = self.sampler.read()
+                success, image, self.location = self.sampler.read()
                 if not success:
                     if self.verbose:
                         print("[CAM {}] URL: {}, END FRAME: {}".format(self.name,
