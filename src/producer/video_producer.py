@@ -24,17 +24,17 @@ from src.kafka.utils import np_to_json
 from src.utils import get_curtimestamp_millis
 import src.processing.cvutils as cvutils
 import src.kafka.settings as settings
-from src.processing.sampling import VideoSampler
+from src.processing.sampling_with_location import VideoSampler
 
 
 class StreamVideo(Process):
     def __init__(self, video_path,
                  topic,
-                 location='CA',
                  topic_partitions=8,
                  use_cv2=False,
                  pub_obj_key=settings.ORIGINAL_PREFIX,
                  sample_speed=10,
+                 location='Unknown',
                  group=None,
                  target=None,
                  name=None,
@@ -143,7 +143,9 @@ class StreamVideo(Process):
             self.sizecnt += sys.getsizeof(message)
             if time.time() - self.timer > 1:
                 acc = self.sizecnt
-                print("Time {} send out size {}".format(int(self.timer - self.zerotime), acc))
+                if self.verbose:
+                    print("Time {} send out size {}".format(int(self.timer - self.zerotime), acc))
+                    print(self.location)
                 self.sizecnt = 0
                 self.timer = time.time()
 
