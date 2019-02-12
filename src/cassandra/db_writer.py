@@ -39,7 +39,7 @@ def insert_frame_command(msginfo):
     camid = 'dashcam_' + str(msginfo['camera'])
     timestamp = msginfo['timestamp']
     store_date = get_date_from_timestamp(timestamp)
-    s3_key = get_s3_key(camid, timestamp)
+    s3_key = get_s3_key(msginfo['camera'], timestamp)
 
     insert_json = {}
     insert_json['dashcam_id'] = camid
@@ -55,7 +55,7 @@ def insert_frame_command(msginfo):
     return insert_command
 
 
-def update_statistic_command(msginfo, cnt, keyframes):
+def update_statistic_command(msginfo, cnt, keyframes, frames):
     """This is the information needed to update the statistics"""
     dashcam_id = 'dashcam_' + str(msginfo['camera'])
     store_date = get_date_from_timestamp(msginfo['timestamp'])
@@ -67,7 +67,8 @@ def update_statistic_command(msginfo, cnt, keyframes):
         total += cnt[key]
         command += subcommand
     command += " total = total + " + str(total) + ','
-    command += " keyframes = keyframes + " + str(keyframes)
+    command += " keyframes = keyframes + " + str(keyframes) + ','
+    command += " frames = frames + " + str(frames)
     command += " WHERE dashcam_id = \'" + dashcam_id + "\'"
     command += " AND store_date= \'" + str(store_date) + "\'"
     command += " AND location= \'" + location + '\';'

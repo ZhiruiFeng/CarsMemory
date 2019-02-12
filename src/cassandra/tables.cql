@@ -68,6 +68,7 @@ CREATE TABLE statistic (
     snowfield counter,
     neighborhood counter,
     keyframes counter,
+    frames counter,
     street counter,
     village counter,
     PRIMARY KEY ((dashcam_id, store_date), location)
@@ -87,4 +88,4 @@ CREATE TABLE throughput (
     record_time timestamp,
     size float,
     PRIMARY KEY (dashcam_id, record_time)
-)
+);

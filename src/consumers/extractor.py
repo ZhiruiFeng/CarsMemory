@@ -62,6 +62,7 @@ class Extractor(Process):
         self.uppersize = 128
         self.scenemapper = {}
         self.keyframe_cnt = 0
+        self.frame_cnt = 0
         self.load_scene_mapper()
 
     def run(self):
@@ -138,6 +139,7 @@ class Extractor(Process):
                         # Scene statistic
                         scenecnt = Counter(result['scenes'])
                         self.counter += scenecnt
+                        self.frame_cnt += 1
                         if result['is_keyframe']:
                             self.keyframe_cnt += 1
 
@@ -183,6 +185,7 @@ class Extractor(Process):
                 # Scene statistic
                 scenecnt = Counter(result['scenes'])
                 self.counter += scenecnt
+                self.frame_cnt += 1
                 if result['is_keyframe']:
                     self.keyframe_cnt += 1
 
@@ -209,8 +212,10 @@ class Extractor(Process):
         msginfo['update_statistic'] = True
         msginfo['update_scene_cnt'] = dict(self.counter)
         msginfo['update_keyframe_cnt'] = int(self.keyframe_cnt)
+        msginfo['update_frame_cnt'] = int(self.frame_cnt)
         self.counter = Counter()
         self.keyframe_cnt = 0
+        self.frame_cnt = 0
         self.timer = time.time()
 
     def is_valuable(self, msginfo):
