@@ -25,8 +25,8 @@ class DBWriter(object):
         except:
             print('Executation error.')
 
-    def update_statistic(self, msginfo, cnt, keyframes):
-        command = update_statistic_command(msginfo, cnt, keyframes)
+    def update_statistic(self, msginfo, cnt, keyframes, frames):
+        command = update_statistic_command(msginfo, cnt, keyframes, frames)
         # print(command)
         try:
             self.session.execute(command)

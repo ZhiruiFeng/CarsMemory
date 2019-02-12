@@ -113,11 +113,14 @@ class VideoSampler(object):
         localfile = '/tmp/' + info_name
         try:
             self.bucket.download_file(file_key, localfile)
+            lat, lon = None, None
             with open(localfile, 'r') as info_file:
                 json_data = info_file.read()
                 data = json.loads(json_data)
                 slice = data['locations'][0]
-                return slice['latitude'], slice['longitude']
+                lat, lon = slice['latitude'], slice['longitude']
+            os.remove(localfile)
+            return lat, lon
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
                 print("Could not find the infomation file")

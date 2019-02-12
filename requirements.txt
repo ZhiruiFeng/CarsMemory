@@ -13,3 +13,4 @@ boto3
 botocore
 geopy
 Algorithmia
+Pillow
