@@ -1,5 +1,10 @@
 # DASHCASH/CarsMemory
 
+Related Links:
+[Website](http://bit.ly/dashcam_plus)
+[Slides](https://docs.google.com/presentation/d/1rpKoqPEjO33VXdCXvOV6eAh8UahSFUxhIBhUzE4KeH4)
+[Demo](https://www.youtube.com/watch?v=l8Rcm1wlgvg)
+
 ## Introduction
 
 <img src="./images/chances.png" height="225" width="500" />
@@ -81,6 +86,12 @@ In summary:
 <img src="./images/architecture.png" height="225" width="500" />
 
 Above shows how the project code base is arranged.
+
+### UI Screen Shot
+![ui](./images/ui.png)
+
+### Keyframes Extraction Result Sample
+![sample](./images/sample.gif)
 
 ### Setup
 

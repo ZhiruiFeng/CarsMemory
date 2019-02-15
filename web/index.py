@@ -82,6 +82,7 @@ def render_content(tab):
     elif tab == "annotator_tab":
         return annotator.layout
     elif tab == "dash_tab":
+        leads_df = db_manager.get_statistic().to_json(orient="split")
         return leads.layout
     else:
         return monitor.layout
