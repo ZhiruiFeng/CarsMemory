@@ -80,3 +80,16 @@ class S3Connector(object):
                 print("The object does not exist.")
             else:
                 raise
+
+    def copy_obj_within(self, from_key, to_key):
+        try:
+            copy_source = {
+                'Bucket': self.bucket_name,
+                'Key': from_key
+                }
+            self.resource.Object(self.bucket_name, to_key).copy(copy_source)
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == "404":
+                print("The object does not exist.")
+            else:
+                raise
