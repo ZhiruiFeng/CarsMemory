@@ -1,7 +1,8 @@
 """Dividing data into user files"""
+import sys
+sys.path.append('../../')
 from src.awss3.connector_s3 import S3Connector
 from src.params import MY_BUCKET
-import sys
 
 
 def divide_data(folder_key):
@@ -38,8 +39,8 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage producer_starter.py <s3_folder_key>")
         exit(-1)
-    if str(sys.argv[2])[-1] != '/':
+    if str(sys.argv[1])[-1] != '/':
         print("The second parameter should be a s3 foldr key, end with '/'")
         exit(-1)
-    s3_folder_key = str(sys.argv[2])
+    s3_folder_key = str(sys.argv[1])
     divide_data(s3_folder_key)
