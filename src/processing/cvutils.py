@@ -6,7 +6,7 @@
 import cv2
 import imutils
 import numpy as np
-import visualutils as vis_util
+import src.processing.visualutils as vis_util
 import os
 from PIL import Image
 

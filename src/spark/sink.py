@@ -5,7 +5,26 @@ from pyspark import SparkContext
 from pyspark.stream import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from src.params import KAFKA_BROKER
-from src.cassandra.db_writer import insert_frame_command
+from cassandra.cluster import Cluster
+from cassandra import ConsistencyLevel
+from cassandra.query import BatchStatement
+from src.cassandra.db_writer import insert_frame_command, update_statistic_command
+from src.params import DB_CLUSTER_HOSTNAME, CASSANDRA_PORT, DB_KEYSPACE
+
+
+def sink_to_db(msg):
+    """According to the massage info to write to database"""
+    cluster = Cluster([DB_CLUSTER_HOSTNAME], port=CASSANDRA_PORT)
+    session = cluster.connect(DB_KEYSPACE)
+    insert_frame = insert_frame_command(msg)
+    batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
+    batch.add(insert_frame)
+    if 'update_statistic' in msg:
+        update_statistic = update_statistic_command(msg)
+        batch.add(update_statistic)
+
+    session.execute(batch)
+    cluster.shutdown()
 
 
 if __name__ == "__main__":
@@ -15,36 +34,19 @@ if __name__ == "__main__":
     ssc = StreamingContext(sc, 5)  # Batch duration
 
     brokers = KAFKA_BROKER
-    group_name = "spark-sinker"
     topic = "sink"
-    topic_partitions = 16
 
-    kafkaStream = KafkaUtils.createStream(ssc,
-                                          brokers,
-                                          group_name,
-                                          {topic: topic_partitions})
-    # Partitions
+    kafkaStream = KafkaUtils.createDirectStream(ssc,
+                                                topic,
+                                                {"metadata.broker.list": KAFKA_BROKER})
+    # Get valuable data
     parsed = kafkaStream \
         .map(lambda v: json.loads(v[1])) \
         .filter(lambda v: v['valuable'])
 
-    parsed.pprint()
-
-    scene_count = parsed \
-        .flatMap(lambda msginfo: msginfo['scenes']) \
-        .countByValue()
-
-    # Some objects feature calculation:
-    # car_count
-    # person_count
-    # traffic_sign_count
-
-    # Insert to frames
-    frames_insert_commands = parsed \
-        .map(lambda msginfo: insert_frame_command(msginfo)) \
-
-
-    # Next save to cassandra.
+    # Save to datebase
+    save = parsed.map(sink_to_db)
 
     ssc.start()
     ssc.awaitTermination()
+    ssc.stop()

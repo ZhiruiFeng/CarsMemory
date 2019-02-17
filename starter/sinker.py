@@ -34,10 +34,7 @@ try:
             print(msginfo)
             dbwriter.insert_new_to_frame(msginfo)
             if 'update_statistic' in msginfo:
-                scene_cnt = msginfo['update_scene_cnt']
-                keyframe_cnt = msginfo['update_keyframe_cnt']
-                frame_cnt = msginfo['update_frame_cnt']
-                dbwriter.update_statistic(msginfo, scene_cnt, keyframe_cnt, frame_cnt)
+                dbwriter.update_statistic(msginfo)
 
         elif msg.error().code() == KafkaError._PARTITION_EOF:
             print('End of partition reached {0}/{1}'

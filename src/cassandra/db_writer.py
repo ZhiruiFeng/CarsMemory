@@ -55,8 +55,14 @@ def insert_frame_command(msginfo):
     return insert_command
 
 
-def update_statistic_command(msginfo, cnt, keyframes, frames):
+def update_statistic_command(msginfo):
     """This is the information needed to update the statistics"""
+    cnt = msginfo['update_scene_cnt']
+    keyframes = msginfo['update_keyframe_cnt']
+    if "update_frame_cnt" in msginfo:
+        frames = msginfo['update_frame_cnt']
+    else:
+        frames = cnt
     dashcam_id = 'dashcam_' + str(msginfo['camera'])
     store_date = get_date_from_timestamp(msginfo['timestamp'])
     location = msginfo['location']

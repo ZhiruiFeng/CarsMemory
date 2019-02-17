@@ -14,7 +14,7 @@ def start_producer(s3_folder_key, id, location, partitions):
     verbose = False
     pub_obj_key = "original"
     rr_distribute = False
-    producer = StreamVideo(s3_folder_key, topic, location, partitions,
+    producer = StreamVideo(s3_folder_key, topic, partitions,
                            sample_speed=5,
                            use_cv2=use_cv2,
                            verbose=verbose,
