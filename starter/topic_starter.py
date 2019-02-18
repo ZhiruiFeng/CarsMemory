@@ -1,6 +1,6 @@
 """Only need to start once for the whole system"""
 import sys
-sys.path.append('../')
+sys.path.append('/home/ubuntu/workspace/CarsMemory/')
 from src.kafka.utils import set_topic
 from src.params import FRAME_PARTITIONS, URL_PARTITIONS, VALUE_PARTITIONS
 
