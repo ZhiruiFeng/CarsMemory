@@ -33,7 +33,7 @@ if __name__ == "__main__":
     producers = []
     for i in range(4):
         cam_id = start + i
-        s3_folder_key = "dataset/dashcam/user_" + str(cam_id) + '/videos'
+        s3_folder_key = "dataset/dashcam/user_" + str(cam_id) + '/videos/'
         producer = start_producer(s3_folder_key, cam_id)
         producers.append(producer)
 
