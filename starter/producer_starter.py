@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../')
+sys.path.append('/home/ubuntu/workspace/CarsMemory/')
 from src.producer.video_producer import StreamVideo
 from src.kafka.utils import clear_topic, set_topic
 from src.params import FRAME_PARTITIONS
