@@ -36,7 +36,7 @@ Finally, from a production perspective, we plan to realize connecting the system
 
 ### Tech Stack
 
-![Techstack](./images/techstack_v3.png)
+![Techstack](./images/techstack_v4.png)
 
 1. Kafka: used as message bus to transmit stream data to different processing units, and it helps decouple modules to make the architecture flexible when adding new functions.
 2. Spark Streaming: used to process streaming data which are metadata describing the frames of videos.
@@ -86,6 +86,9 @@ In summary:
 <img src="./images/architecture.png" height="225" width="500" />
 
 Above shows how the project code base is arranged.
+
+### Kafka Realtime Monitor
+![ui](./images/monitor.gif)
 
 ### UI Screen Shot
 ![ui](./images/ui.png)
