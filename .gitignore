@@ -20,3 +20,6 @@ tmp/
 
 # Line counter
 line-count.txt
+
+# Binary file
+.pyc

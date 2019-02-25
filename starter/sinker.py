@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../')
+sys.path.append('/home/ubuntu/workspace/CarsMemory/')
 from confluent_kafka import Consumer, KafkaError
 from src.params import KAFKA_BROKER
 from src.cassandra.db_connector import CassandraConnector

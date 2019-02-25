@@ -14,3 +14,4 @@ botocore
 geopy
 Algorithmia
 Pillow
+presto-python-client

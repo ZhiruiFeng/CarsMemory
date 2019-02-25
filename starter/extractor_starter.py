@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../')
+sys.path.append('/home/ubuntu/workspace/CarsMemory/')
 from src.kafka.utils import clear_topic, set_topic, topic_is_alive
 from src.params import VALUE_PARTITIONS
 from src.consumers.extractor import Extractor
@@ -13,8 +13,8 @@ if __name__ == "__main__":
     # Set obj_topic and start extractor
     obj_topic = 'obj_' + cam_id
     group_id = 'extractor' + cam_id
-    if not topic_is_alive(obj_topic):
-        set_topic(obj_topic, partitions=1)
+    # For stress tests, reset the topic
+    set_topic(obj_topic, partitions=1)
     value_topic = "value"
     extractor = Extractor(obj_topic,
                           value_topic,

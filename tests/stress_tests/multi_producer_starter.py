@@ -25,15 +25,19 @@ def start_producer(s3_folder_key, id):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage producer_starter.py <dashcam_id> <s3_folder_key>")
+    if len(sys.argv) != 2:
+        print("Usage producer_starter.py <group>")
         exit(-1)
-    cam_id = str(sys.argv[1])
-    if str(sys.argv[2])[-1] != '/':
-        print("The second parameter should be a s3 foldr key, end with '/'")
-        exit(-1)
-    s3_folder_key = str(sys.argv[2])
+    groups = int(sys.argv[1])
+    start = groups * 4
+    producers = []
+    for i in range(4):
+        cam_id = start + i
+        s3_folder_key = "dataset/dashcam/user_" + str(cam_id) + '/videos/'
+        producer = start_producer(s3_folder_key, cam_id)
+        producers.append(producer)
 
-    producer = start_producer(s3_folder_key, cam_id)
-    producer.start()
-    producer.join()
+    for p in producers:
+        p.start()
+    for p in producers:
+        p.join()

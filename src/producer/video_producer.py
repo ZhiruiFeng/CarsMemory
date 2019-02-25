@@ -73,6 +73,7 @@ class StreamVideo(Process):
         self.zerotime = time.time()
         self.sizecnt = 0
         self.location = location
+        self.report_range = 60
 
     def run(self):
         """Publish video frames as json objects, timestamped, marked with camera number.
@@ -140,12 +141,13 @@ class StreamVideo(Process):
                                      object_key=self.object_key,
                                      camera=self.camera_num,
                                      verbose=self.verbose)
-            self.sizecnt += sys.getsizeof(message)
-            if time.time() - self.timer > 1:
+            self.sizecnt += 1
+            if time.time() - self.timer > self.report_range:
                 acc = self.sizecnt
-                if self.verbose:
-                    print("Time {} send out size {}".format(int(self.timer - self.zerotime), acc))
-                    print(self.location)
+                #if self.verbose:
+                print("[Cam {}]Minute {} send out size {}".format(self.camera_num,
+                                                                  int(self.timer - self.zerotime)//self.report_range,
+                                                                  acc))
                 self.sizecnt = 0
                 self.timer = time.time()
 
